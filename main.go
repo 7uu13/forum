@@ -6,7 +6,10 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/7uu13/forum/models"
+	"github.com/7uu13/forum/Model"
+	"github.com/7uu13/forum/Repository"
+	"github.com/7uu13/forum/Service"
+	"github.com/7uu13/forum/Controller"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -19,11 +22,14 @@ func main() {
 
 	defer db.Close()
 
-	models.PerformMigrations(db)
+	model.PerformMigrations(db)
 
+    userRepo := Repository.NewUserRepository(db)
+    userService := Service.NewUserService(userRepo)
+    userController := Controller.NewUserController(userService)
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	})
+	http.HandleFunc("/user/:Id", userController.GetUserByID)
+	http.HandleFunc("/user", userController.CreateUser)
 
 	fmt.Printf("Starting server at port 8080\n")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
