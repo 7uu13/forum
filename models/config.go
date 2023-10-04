@@ -2,7 +2,6 @@ package models
 
 import "database/sql"
 
-
 func createTables(db *sql.DB) error {
 	createUserTable := `
         CREATE TABLE IF NOT EXISTS users (
