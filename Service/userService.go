@@ -6,5 +6,7 @@ import (
 
 type UserService interface {
 	GetUserByID(id int) (model.User, error)
+	GetUserByUsername(username string) (model.User, error)
 	CreateUser(user model.User) (int64, error)
+	AuthenticateUser(username, password string) (model.User, error)
 }
