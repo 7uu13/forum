@@ -2,7 +2,6 @@ package Controller
 
 import (
 	"net/http"
-	"fmt"
 )
 
 func (c *UserControllerImpl) LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -12,20 +11,21 @@ func (c *UserControllerImpl) LoginHandler(w http.ResponseWriter, r *http.Request
 		http.ServeFile(w, r, "templates/login.html")
 
 	case "POST":
+		if r.Method != http.MethodPost {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 
 		_, err := c.userService.AuthenticateUser(username, password)
 
 		if err != nil {
-			fmt.Fprintf(w, "Wrong Username or Password")
+			http.Error(w, "Wrong Username or Password", http.StatusUnauthorized)
 			return
 		}
 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
-		
-	default:
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
 	}
 }
