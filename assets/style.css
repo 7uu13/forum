@@ -1,5 +1,8 @@
+
+
 header {
-    background-color: #333;
+    background-color: white;
+    border-bottom: 2px solid rgba(128, 128, 128, 0.3);
 }
 
 header ul {
@@ -9,13 +12,12 @@ header ul {
 
 header li {
     list-style-type: none;
-    display: inline-block;
 }
 
 header li a {
     padding: 10px;
     text-decoration: none;
-    display: block;
+    margin: 10px;
 }
 
 header li a:hover {
@@ -23,10 +25,109 @@ header li a:hover {
     text-decoration:none; 
 }
 
+header li a:visited {
+    text-decoration: none;
+    color: blue;
+}
+
 .topnav {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
+    justify-content: flex-end;
+}
+
+body {
+    width: 100%;
+    margin: 0px;
+    font-size: 18px;
+}
+
+main {
+    display: flex;
+    height: 100%;
+    flex-direction: row-reverse;
+}
+
+.sidebar {
+    width: 20vw;
+    height: 100vh;
+    background-color: white;
+   
+    margin-top: 20px;
+}
+
+
+.posts-container {
+
+    width: 80vw;
+    min-height: fit-content;
+    background-color: white;
+    border-left: 2px solid rgba(128, 128, 128, 0.301);
     
 }
+
+.categories {
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+    align-items: center;
+    padding: 0;
+}
+
+.categories li {
+    color: blue;
+    padding: 0;
+}
+
+.categories li span {
+    color: rgb(85, 85, 85)
+}
+
+.category {
+    list-style-type: square;
+}
+
+.filters {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-left: 70px;
+    margin-right: 70px;
+}
+
+.filters .select select {
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.headers {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 2px solid rgba(128, 128, 128, 0.301);
+    margin: 0px 70px 0px 70px;
+}
+
+.right {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.post {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+}
+
+.posts {
+    margin: 20px 70px 0 70px;
+}
+
+.posts .right {
+    gap: 55px;
+}
+
