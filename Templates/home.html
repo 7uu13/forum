@@ -3,9 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forumt</title>
+    <link rel="stylesheet" href="/assets/style.css">
+    <title>Forum</title>
 </head>
 <body>
-    <h1>Home Page</h1>
+    <header>
+        <nav class="topnav">
+            <ul>
+                <li><a href="/">home</a></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/logout">Logout</a></li>
+                <li><a href="/profile">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="info">
+
+        </div>
+        <div class="posts-container">
+            <div class="filters">
+                <div class="select">
+                    <select name="Filter" id="filters">
+                        <option value="">Latest</option>
+                        <option value="">Oldest</option>
+                        <option value="">Most popular</option>
+                      </select>
+                </div>
+                <div class="select">
+                    <select name="Categories" id="categories">
+                        <option value="">Topic 1</option>
+                        <option value="">Topic 2</option>
+                        <option value="">Topic 3</option>
+                      </select>
+                </div>
+            </div>
+            <div class="headers">
+                <div class="left"><h3>Topic</h3></div>
+                <div class="right">
+                    <h3>Replies</h3>
+                    <h3>Views</h3>
+                    <h3>Activity</h3>
+                </div>
+            </div>
+            <div class="posts">
+                <div class="post">
+                    <div class="left">
+                        <div class="topic">Topic1</div>
+                    </div>
+                    <div class="right">
+                        <div class="replies">10</div>
+                        <div class="views">123</div>
+                        <div class="activity">Okt 10</div>
+                    </div>   
+                </div>
+                <div class="post">
+                    <div class="left">
+                        <div class="topic">Topic1</div>
+                    </div>
+                    <div class="right">
+                        <div class="replies">10</div>
+                        <div class="views">123</div>
+                        <div class="activity">Okt 10</div>
+                    </div>   
+                </div>
+                <div class="post">
+                    <div class="left">
+                        <div class="topic">Topic1</div>
+                    </div>
+                    <div class="right">
+                        <div class="replies">10</div>
+                        <div class="views">123</div>
+                        <div class="activity">Okt 10</div>
+                    </div>   
+                </div>
+                <div class="post">
+                    <div class="left">
+                        <div class="topic">Topic1</div>
+                    </div>
+                    <div class="right">
+                        <div class="replies">10</div>
+                        <div class="views">123</div>
+                        <div class="activity">Okt 10</div>
+                    </div>   
+                </div>
+            </div>
+
+        </div>
+        <div class="sidebar">
+           <ul class="categories">
+                <li class="category"><span>Topic</span></li>
+                <li class="category"><span>Topic</span></li>
+                <li class="category"><span>Topic</span></li>
+                <li class="category"><span>Topic</span></li>
+                <li class="category"><span>Topic</span></li>
+                <li class="category"><span>Topic</span></li>
+                <li class="category"><span>Topic</span></li>
+                <li class="category"><span>Topic</span></li>
+           </ul>
+        </div>
+
+    </main>
+    <footer>
+        
+    </footer>
 </body>
 </html>

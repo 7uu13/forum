@@ -62,6 +62,7 @@ func (r *UserRepositoryImpl) CreateUser(user model.User) (int64, error) {
 	return userID, nil
 }
 
+
 func (r *UserRepositoryImpl) AuthenticateUser(username, password string) (model.User, error) {
 
 	user, err := r.GetUserByUsername(username)
