@@ -44,7 +44,7 @@ func (c *UserControllerImpl) CreateUser(w http.ResponseWriter, r *http.Request) 
 	switch r.Method {
 
 	case "GET":
-		http.ServeFile(w, r, "templates/signup.html")
+		http.ServeFile(w, r, "Templates/signup.html")
 
 	case "POST":
 		err := r.ParseForm()

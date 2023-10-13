@@ -1,15 +1,15 @@
 package Controller
 
 import (
-	"net/http"
 	"fmt"
+	"net/http"
 )
 
 func (c *UserControllerImpl) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 
 	case "GET":
-		http.ServeFile(w, r, "templates/login.html")
+		http.ServeFile(w, r, "Templates/login.html")
 
 	case "POST":
 		username := r.FormValue("username")
@@ -23,7 +23,7 @@ func (c *UserControllerImpl) LoginHandler(w http.ResponseWriter, r *http.Request
 		}
 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
-		
+
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
