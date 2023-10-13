@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func HomePageController(w http.ResponseWriter, r *http.Request) {
+func HomePage(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseGlob("Templates/home.html")
 	if err != nil {
 		log.Fatal(err)
