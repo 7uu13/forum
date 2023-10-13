@@ -5,13 +5,16 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-
-	//"strconv"
 	"database/sql"
+	"html/template"
 
 	"github.com/7uu13/forum/model"
 	"github.com/7uu13/forum/service"
 )
+
+type Error struct {
+	Message string
+}
 
 // func GetUserByID(w http.ResponseWriter, r *http.Request) {
 // 	userIdStr := r.URL.Query().Get("id")
@@ -64,7 +67,6 @@ func CreateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			Password:  r.FormValue("password"),
 		}
 
-		fmt.Println("xdddd")
 		userID, err := service.CreateUser(db, user)
 		if err != nil {
 			fmt.Println(err)
@@ -83,11 +85,14 @@ func CreateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 
-func LoginHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+func Login(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 
 	case "GET":
-		http.ServeFile(w, r, "Templates/login.html")
+
+		tmpl := template.Must(template.ParseFiles("templates/login.html"))
+		tmpl.Execute(w, nil)
+		//http.ServeFile(w, r, "Templates/login.html")
 
 	case "POST":
 
@@ -98,16 +103,21 @@ func LoginHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 		username := r.FormValue("username")
 		password := r.FormValue("password")
-		fmt.Println(username)
+
 		_, err := service.AuthenticateUser(db, username, password)
 
+		er := Error {
+			Message: "Incorrect Username or Password",
+		}
+
 		if err != nil {
-			http.Error(w, "Wrong Username or Password", http.StatusUnauthorized)
-			return
+			tmpl := template.Must(template.ParseFiles("templates/login.html"))
+			w.WriteHeader(http.StatusUnauthorized)
+			tmpl.Execute(w, er)
+			//http.Error(w, "Wrong Username or Password", http.StatusUnauthorized)
 		}
 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
-		//fmt.Fprintf(w, username)
 
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)

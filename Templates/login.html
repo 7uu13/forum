@@ -7,12 +7,21 @@
     <div id="login-container">
         <h1>Login</h1>
         <form method="POST" action="/login"> 
+            {{ if .Message }}
+                <div class="error"> {{ .Message }} </div>
+            {{ end }}
             <label for="username">Username or Email:</label>
             <input type="text" id="username" name="username" required>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-
-            <button type="submit">Login</button>
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div>
+                <button type="submit">Login</button>
+            </div>
+            <div>
+                <a href="/signup">Join with us</a>
+            </div>
         </form>
     </div>
 </body>
