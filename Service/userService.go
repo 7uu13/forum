@@ -27,8 +27,8 @@ func GetUserByUsername(db *sql.DB, username string) (model.User, error) {
 	err := db.QueryRow(stmt, username).Scan(&user.Id, &user.Username, &user.Password)
 	if err != nil {
 		if err == sql.ErrNoRows {
-            return user, fmt.Errorf("User not found")
-        }
+			return user, fmt.Errorf("User not found")
+		}
 		return user, err
 	}
 	return user, nil

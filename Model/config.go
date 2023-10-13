@@ -21,7 +21,7 @@ func createTables(db *sql.DB) error {
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			title TEXT NOT NULL,
 			content TEXT NOT NULL,
-			created DATETIME DEFAULT CURRENT_TIMESTAMP,
+			created DATETIME CURRENT_TIMESTAMP,
 			user_id INTEGER,
 			foreign key (user_id) REFERENCES users (id)
 		);		

@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/7uu13/forum/model"
+	 "github.com/7uu13/forum/model"
 	"github.com/7uu13/forum/controller"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -27,7 +27,7 @@ func main() {
 	})
 
 	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
-        controller.Login(db, w, r)
+		controller.Login(db, w, r)
 	})
 
 	http.HandleFunc("/create", func(w http.ResponseWriter, r *http.Request) {

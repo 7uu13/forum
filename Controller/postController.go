@@ -1,10 +1,9 @@
 package controller
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
-	"database/sql"
-
 	"github.com/7uu13/forum/model"
 	"github.com/7uu13/forum/service"
 )
@@ -27,8 +26,8 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		title := r.FormValue("postTitle")
-		content := r.FormValue("postContent")
+		title := r.FormValue("title")
+		content := r.FormValue("content")
 
 		post := &model.Post{
 			Title:   title,
