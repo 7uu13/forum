@@ -32,6 +32,15 @@ func (s *UserServiceImpl) CreateUser(user model.User) (int64, error) {
 	return userID, nil
 }
 
+func (s *UserServiceImpl) CreatePost(post model.Post) (int64, error) {
+	postID, err := s.userRepo.CreatePost(post)
+	if err != nil {
+		return 0, err
+	}
+
+	return postID, nil
+}
+
 func (s *UserServiceImpl) AuthenticateUser(username, password string) (model.User, error) {
 	// Retrieve the user by username from the user repository
 	user, err := s.userRepo.GetUserByUsername(username)

@@ -18,6 +18,10 @@ func NewUserController(userService Service.UserService) UserController {
 	return &UserControllerImpl{userService}
 }
 
+func NewPostController(userService Service.UserService) PostController {
+	return &UserControllerImpl{userService}
+}
+
 func (c *UserControllerImpl) GetUserByID(w http.ResponseWriter, r *http.Request) {
 	userIdStr := r.URL.Query().Get("id")
 	userId, err := strconv.Atoi(userIdStr)
