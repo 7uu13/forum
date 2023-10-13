@@ -65,7 +65,7 @@ func AuthenticateUser(db *sql.DB, username, password string) (model.User, error)
 
 	// err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if user.Password != password {
-		return model.User{}, err
+		return model.User{}, fmt.Errorf("Password doesn't match")
 	}
 	return user, nil
 }

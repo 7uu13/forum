@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
+
 	//"strconv"
 	"database/sql"
 
 	"github.com/7uu13/forum/model"
 	"github.com/7uu13/forum/service"
 )
-
 
 // func GetUserByID(w http.ResponseWriter, r *http.Request) {
 // 	userIdStr := r.URL.Query().Get("id")
@@ -46,25 +47,24 @@ func CreateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// ageStr := r.FormValue("age")
-		// age, err := strconv.Atoi(ageStr)
-		// if err != nil {
-		// 	http.Error(w, "Invalid age value", http.StatusBadRequest)
-		// 	return
-		// }
+		ageStr := r.FormValue("age")
+		age, err := strconv.Atoi(ageStr)
+		if err != nil {
+			http.Error(w, "Invalid age value", http.StatusBadRequest)
+			return
+		}
 
-		// user := model.User{
-		// 	Username:  r.FormValue("username"),
-		// 	Age:       age,
-		// 	Gender:    r.FormValue("gender"),
-		// 	FirstName: r.FormValue("first_name"),
-		// 	LastName:  r.FormValue("last_name"),
-		// 	Email:     r.FormValue("email"),
-		// 	Password:  r.FormValue("password"),
-		// }
+		user := model.User{
+			Username:  r.FormValue("username"),
+			Age:       age,
+			Gender:    r.FormValue("gender"),
+			FirstName: r.FormValue("first_name"),
+			LastName:  r.FormValue("last_name"),
+			Email:     r.FormValue("email"),
+			Password:  r.FormValue("password"),
+		}
 
-		fmt.Println("xdddd")			
-		var user model.User
+		fmt.Println("xdddd")
 		userID, err := service.CreateUser(db, user)
 		if err != nil {
 			fmt.Println(err)
@@ -82,51 +82,6 @@ func CreateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
-// func (c *UserControllerImpl) CreateUser(w http.ResponseWriter, r *http.Request) {
-
-// 	switch r.Method {
-
-// 	case "GET":
-// 		http.ServeFile(w, r, "Templates/signup.html")
-
-// 	case "POST":
-// 		err := r.ParseForm()
-// 		if err != nil {
-// 			http.Error(w, "Invalid JSON", http.StatusBadRequest)
-// 			return
-// 		}
-
-// 		ageStr := r.FormValue("age")
-// 		age, err := strconv.Atoi(ageStr)
-// 		if err != nil {
-// 			http.Error(w, "Invalid age value", http.StatusBadRequest)
-// 			return
-// 		}
-
-// 		user := model.User{
-// 			Username:  r.FormValue("username"),
-// 			Age:       age,
-// 			Gender:    r.FormValue("gender"),
-// 			FirstName: r.FormValue("first_name"),
-// 			LastName:  r.FormValue("last_name"),
-// 			Email:     r.FormValue("email"),
-// 			Password:  r.FormValue("password"),
-// 		}
-
-// 		userID, err := c.userService.CreateUser(user)
-// 		if err != nil {
-// 			fmt.Println(err)
-// 			http.Error(w, "Error creating user", http.StatusInternalServerError)
-// 			return
-// 		}
-
-// 		response := map[string]int64{"id": userID}
-// 		w.Header().Set("Content-Type", "application/json")
-// 		w.WriteHeader(http.StatusCreated)
-// 		json.NewEncoder(w).Encode(response)
-// 	}
-// }
 
 func LoginHandler(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
