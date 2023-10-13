@@ -12,7 +12,6 @@ func (c *UserControllerImpl) CreatePostHandler(w http.ResponseWriter, r *http.Re
 	// TODO: Check if user is logged in, if not redirect to login page
 	// TODO: Get User ID from session
 	const temp_user_id = 123123123
-	fmt.Println(r.Method)
 
 	switch r.Method {
 	case "GET":
