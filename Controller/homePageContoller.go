@@ -1,4 +1,4 @@
-package Controller
+package controller
 
 import (
 	"html/template"
@@ -7,7 +7,7 @@ import (
 )
 
 func HomePageController(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseGlob("templates/home.html")
+	tmpl, err := template.ParseGlob("Templates/home.html")
 	if err != nil {
 		log.Fatal(err)
 	}

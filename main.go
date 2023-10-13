@@ -6,15 +6,13 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/7uu13/forum/Controller"
-	"github.com/7uu13/forum/Model"
-	"github.com/7uu13/forum/Repository"
-	"github.com/7uu13/forum/Service"
+	"github.com/7uu13/forum/model"
+	"github.com/7uu13/forum/controller"
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func main() {
 
+func main() {
 	db, err := sql.Open("sqlite3", "mydb.db")
 	if err != nil {
 		panic(err)
@@ -24,14 +22,16 @@ func main() {
 
 	model.PerformMigrations(db)
 
-	userRepo := Repository.NewUserRepository(db)
-	userService := Service.NewUserService(userRepo)
-	userController := Controller.NewUserController(userService)
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
-	http.HandleFunc("/", Controller.HomePageController)
-	http.HandleFunc("/user/:Id", userController.GetUserByID)
-	http.HandleFunc("/user", userController.CreateUser)
-	http.HandleFunc("/login", userController.LoginHandler)
+	http.HandleFunc("/", controller.HomePageController)
+	// http.HandleFunc("/user/:Id", userController.GetUserByID)
+	http.HandleFunc("/signup", func(w http.ResponseWriter, r *http.Request) {
+		controller.CreateUser(db, w, r)
+	})
+	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+        controller.LoginHandler(db, w, r)
+	})
 
 	fmt.Printf("Starting server at port 8080\n")
 	if err := http.ListenAndServe(":8080", nil); err != nil {
