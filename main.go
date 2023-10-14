@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	controller "github.com/7uu13/forum/Controller"
-	model "github.com/7uu13/forum/Model"
+	"github.com/7uu13/forum/controller"
+	"github.com/7uu13/forum/model"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -30,8 +30,16 @@ func main() {
 		controller.Login(db, w, r)
 	})
 
+	http.HandleFunc("/logout", func(w http.ResponseWriter, r *http.Request) {
+		controller.Logout(w, r)
+	})
+
 	http.HandleFunc("/create", func(w http.ResponseWriter, r *http.Request) {
 		controller.CreatePost(db, w, r)
+	})
+
+	http.HandleFunc("/me", func(w http.ResponseWriter, r *http.Request) {
+		controller.Profilepage(w, r)
 	})
 
 	http.HandleFunc("/", controller.HomePage)

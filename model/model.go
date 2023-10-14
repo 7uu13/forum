@@ -2,8 +2,6 @@ package model
 
 import "time"
 
-//import "time"
-
 type User struct {
 	Id        int    `json:"id"`
 	Username  string `json:"username"`
@@ -22,3 +20,10 @@ type Post struct {
 	Created time.Time
 	UserId  int
 }
+
+type PostCategory struct {
+	Id   int
+	Post_id int
+	Name string
+}
+

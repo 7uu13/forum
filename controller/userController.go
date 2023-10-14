@@ -7,7 +7,10 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"time"
 
+	"github.com/google/uuid"
+	"github.com/7uu13/forum/middleware"
 	"github.com/7uu13/forum/model"
 	"github.com/7uu13/forum/service"
 )
@@ -15,27 +18,6 @@ import (
 type Error struct {
 	Message string
 }
-
-// func GetUserByID(w http.ResponseWriter, r *http.Request) {
-// 	userIdStr := r.URL.Query().Get("id")
-// 	userId, err := strconv.Atoi(userIdStr)
-// 	if err != nil {
-// 		http.Error(w, "Invalid User Id", http.StatusBadRequest)
-// 		return
-// 	}
-
-// 	user, err := service.GetUserByID(userId)
-// 	if err != nil {
-// 		http.Error(w, "User Not Found!", http.StatusNotFound)
-// 		return
-// 	}
-
-// 	w.Header().Set("Content-Type", "application/json")
-// 	if err := json.NewEncoder(w).Encode(user); err != nil {
-// 		http.Error(w, "Error encoding the response", http.StatusInternalServerError)
-// 		return
-// 	}
-// }
 
 func CreateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
@@ -116,8 +98,78 @@ func Login(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			//http.Error(w, "Wrong Username or Password", http.StatusUnauthorized)
 		}
 
+		// cookie logic for testing only
+		sessionToken := uuid.NewString()
+
+		expiresAt := time.Now().Add(120 * time.Second)
+
+		middleware.Sessions[sessionToken] = middleware.Session {
+			Username: username,
+			Expiry: expiresAt,
+		}
+
+
+		http.SetCookie(w, &http.Cookie {
+			Name: "test",
+			Value: sessionToken,
+			Expires: expiresAt,
+		})
+
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+}
+
+func Logout(w http.ResponseWriter, r *http.Request) {
+	c, err := r.Cookie("test")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	sessionToken := c.Value
+
+	delete(middleware.Sessions, sessionToken)
+
+	http.SetCookie(w, &http.Cookie {
+		Name: "test",
+		Value: "",
+		Expires: time.Now(),
+	})
+
+}
+
+func UserProfile(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+
+	case "GET":
+		cookie, err := r.Cookie("session")
+		if err != nil {
+			if err == http.ErrNoCookie {
+				http.Redirect(w, r, "/login", http.StatusSeeOther)
+				return
+			}
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+	
+		sessionToken := cookie.Value
+		user, err := service.GetUserFromSessionToken(db, sessionToken)
+		if err != nil {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+		fmt.Println(user.Username)
+		tmpl := template.Must(template.ParseFiles("templates/userProfile.html"))
+		tmpl.Execute(w, nil)
+		
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return

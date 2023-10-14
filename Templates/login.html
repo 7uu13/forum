@@ -2,27 +2,43 @@
 <html>
 <head>
     <title>Login</title>
+    <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-    <div id="login-container">
-        <h1>Login</h1>
-        <form method="POST" action="/login"> 
-            {{ if .Message }}
-                <div class="error"> {{ .Message }} </div>
-            {{ end }}
-            <label for="username">Username or Email:</label>
-            <input type="text" id="username" name="username" required>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div>
-                <button type="submit">Login</button>
-            </div>
-            <div>
-                <a href="/signup">Join with us</a>
-            </div>
-        </form>
-    </div>
+    <header>
+        <nav class="topnav">
+            <img src="assets/images/logo.png" alt="Logo">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/logout">Logout</a></li>
+                <li><a href="/me">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="login-main">
+        <div id="login-container" >
+            <h1>Login</h1>
+            <form method="POST" action="/login" class="login"> 
+                {{ if .Message }}
+                    <div class="error"> {{ .Message }} </div>
+                {{ end }}
+                <div class="input-area">
+                <label for="username">Username or Email:</label>
+                <input type="text" id="username" name="username" required>
+                </div>
+                <div class="input-area">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div>
+                    <button type="submit" class="login-button">Login</button>
+                </div>
+                <div class="signup-link">
+                    <a href="/signup">Join with us</a>
+                </div>
+            </form>
+        </div>
+</main>
 </body>
 </html>

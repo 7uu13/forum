@@ -3,8 +3,10 @@ package service
 import (
 	"database/sql"
 	"fmt"
+	"errors"
 
 	"github.com/7uu13/forum/model"
+	"github.com/7uu13/forum/middleware"
 )
 
 func GetUserByID(db *sql.DB, id int) (model.User, error) {
@@ -64,6 +66,23 @@ func AuthenticateUser(db *sql.DB, username, password string) (model.User, error)
 	// err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if user.Password != password {
 		return model.User{}, fmt.Errorf("Password doesn't match")
+	}
+	return user, nil
+}
+
+func GetUserFromSessionToken(db *sql.DB, sessionToken string) (model.User, error) {
+	userFromSession, exists := middleware.Sessions[sessionToken]
+	if !exists {
+		return model.User{}, errors.New("Session not found")
+	}
+	// we shouldnt send out the password but it will work for now
+	user, err := GetUserByUsername(db, userFromSession.Username)
+	fmt.Println(user.Username)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return user, fmt.Errorf("User not found")
+		}
+		return user, err
 	}
 	return user, nil
 }
