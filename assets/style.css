@@ -175,7 +175,6 @@ img {
    border: 1px solid black;
    width: 400px;
    height: 400px;
-   border-radius: 3px;
    text-align: center;
    border-radius: 20px;
    background-color: white;
@@ -225,7 +224,7 @@ img {
     margin: 10px;
     width: 60%;
     padding: 5px 0px 5px 0px;
-    background-color: rgb(75, 162, 238);
+    background-color: rgb(84, 121, 240);
     border-radius: 5px;
     border: none;
     
@@ -233,5 +232,57 @@ img {
 
 .login-button:hover {
     cursor: pointer;
+    background-color: rgb(66, 86, 159);
 }
+
+
+
+.signup-container .input-area {
+    padding: 0px;
+    height: 80px
+}
+
+
+.signup-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.signup-container {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    height: 700px;
+    border-radius: 20px;
+    border: 1px solid black;
+    width: 500px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.signup-container input, .signup-container select {
+    width: 60%;
+    margin: auto;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.396);
+    padding: 3px;
+}
+
+.signup-container label, h2 {
+    text-align: center;
+}
+
+
+.signup-button {
+    background-color:chartreuse 
+}
+
+.signup-button:hover {
+    cursor: pointer;
+    background-color: rgb(88, 173, 2)
+}
+
+
 
