@@ -1,15 +1,21 @@
 package controller
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
-	"fmt"
+
 	//"github.com/google/uuid"
 	"github.com/7uu13/forum/middleware"
 )
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
+
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
 	tmpl, err := template.ParseGlob("templates/home.html")
 	if err != nil {
 		log.Fatal(err)
@@ -57,8 +63,8 @@ func Profilepage(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return
 		}
-        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-        return
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
 
 	sessionToken := c.Value
