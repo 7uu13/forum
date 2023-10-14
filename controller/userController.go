@@ -23,7 +23,7 @@ func CreateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 
 	case "GET":
-		http.ServeFile(w, r, "Templates/signup.html")
+		http.ServeFile(w, r, "templates/signup.html")
 
 	case "POST":
 		err := r.ParseForm()
@@ -73,7 +73,7 @@ func Login(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 		tmpl := template.Must(template.ParseFiles("templates/login.html"))
 		tmpl.Execute(w, nil)
-		//http.ServeFile(w, r, "Templates/login.html")
+		//http.ServeFile(w, r, "templates/login.html")
 
 	case "POST":
 

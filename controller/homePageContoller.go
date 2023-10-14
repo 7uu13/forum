@@ -10,8 +10,7 @@ import (
 )
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
-
-	tmpl, err := template.ParseGlob("Templates/home.html")
+	tmpl, err := template.ParseGlob("templates/home.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -61,7 +60,7 @@ func Profilepage(w http.ResponseWriter, r *http.Request) {
         http.Error(w, "Internal Server Error", http.StatusInternalServerError)
         return
 	}
-	
+
 	sessionToken := c.Value
 
 	userSession, exists := middleware.Sessions[sessionToken]
