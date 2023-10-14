@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	controller "github.com/7uu13/forum/Controller"
-	model "github.com/7uu13/forum/Model"
+	"github.com/7uu13/forum/controller"
+	"github.com/7uu13/forum/model"
 	_ "github.com/mattn/go-sqlite3"
 )
 
