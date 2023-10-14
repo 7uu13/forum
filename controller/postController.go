@@ -17,7 +17,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "GET":
-		http.ServeFile(w, r, "Templates/createPost.html")
+		http.ServeFile(w, r, "templates/createPost.html")
 
 	case "POST":
 		fmt.Println("POST")

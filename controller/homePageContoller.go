@@ -7,7 +7,7 @@ import (
 )
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
-	tmpl, err := template.ParseGlob("Templates/home.html")
+	tmpl, err := template.ParseGlob("templates/home.html")
 	if err != nil {
 		log.Fatal(err)
 	}
