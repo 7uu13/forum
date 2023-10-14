@@ -21,9 +21,14 @@ type Post struct {
 	UserId  int
 }
 
-type PostCategory struct {
-	Id   int
-	Post_id int
-	Name string
+type Categories struct {
+	Id        int
+	Name      string
+	Name_slug string
 }
 
+type PostCategories struct {
+	Id         int
+	PostId     int
+	CategoryId int
+}

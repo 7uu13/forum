@@ -26,23 +26,24 @@ func createTables(db *sql.DB) error {
 			foreign key (user_id) REFERENCES users (id)
 		);		
 	`
-	
-	// createCategoryTable := `
-	// 	CREATE TABLE IF NOT EXISTS categories (
-	// 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-	// 		name TEXT NOT NULL
-	// 	);
-	// `
-	
-	// createPostCategoryTable := `
-	// 	CREATE TABLE IF NOT EXISTS postCategory (
-	// 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-	// 		post_id INTEGER,
-	// 		category_id INTEGER,
-	// 		foreign key (post_id) REFERENCES posts (id),
-	// 		foreign key (category_id) REFERENCES categories (id)
-	// 	);
-	// `
+
+	createCategoryTable := `
+		CREATE TABLE IF NOT EXISTS categories (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL,
+			name_slug TEXT NOT NULL
+		);
+	`
+
+	createPostCategoryTable := `
+		CREATE TABLE IF NOT EXISTS posts_category (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			post_id INTEGER,
+			category_id INTEGER,
+			foreign key (post_id) REFERENCES posts (id),
+			foreign key (category_id) REFERENCES categories (id)
+		);
+	`
 
 	_, err := db.Exec(createUserTable)
 	if err != nil {
@@ -50,6 +51,16 @@ func createTables(db *sql.DB) error {
 	}
 
 	_, err = db.Exec(createPostTable)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(createCategoryTable)
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec(createPostCategoryTable)
 	return err
 }
 

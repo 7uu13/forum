@@ -2,11 +2,11 @@ package service
 
 import (
 	"database/sql"
-	"fmt"
 	"errors"
+	"fmt"
 
-	"github.com/7uu13/forum/model"
 	"github.com/7uu13/forum/middleware"
+	"github.com/7uu13/forum/model"
 )
 
 func GetUserByID(db *sql.DB, id int) (model.User, error) {

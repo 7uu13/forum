@@ -42,6 +42,10 @@ func main() {
 		controller.Profilepage(w, r)
 	})
 
+	http.HandleFunc("/category", func(w http.ResponseWriter, r *http.Request) {
+		controller.CategoryController(db, w, r)
+	})
+
 	http.HandleFunc("/", controller.HomePage)
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
