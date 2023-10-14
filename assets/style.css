@@ -12,6 +12,7 @@ header ul {
     display: flex;
     justify-content: flex-end;
     margin-right: 55px;
+    align-items: center;
 }
 
 header li {
@@ -56,8 +57,16 @@ main {
     width: 20vw;
     height: 100vh;
     background-color: white;
-   
     margin-top: 20px;
+}
+
+.sidebar p {
+    text-align: center;
+    margin-left: 8px;
+    font-weight: 350;
+    margin-top: 13px;
+    margin-bottom: 15px;
+    
 }
 
 
@@ -94,7 +103,8 @@ main {
 
 
 .categories li span {
-    color: rgb(85, 85, 85);
+    color: black;
+    font-weight: 250;
 }
 
 .category {
