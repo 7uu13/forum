@@ -1,13 +1,17 @@
+html {
+    font-family: Helvetica, Arial, sans-serif;
+}
 
 
 header {
     background-color: white;
-    border-bottom: 2px solid rgba(128, 128, 128, 0.3);
+    border-bottom: 1px solid rgba(128, 128, 128, 0.3);
 }
 
 header ul {
     display: flex;
     justify-content: flex-end;
+    margin-right: 55px;
 }
 
 header li {
@@ -25,14 +29,15 @@ header li a:hover {
     text-decoration:none; 
 }
 
-header li a:visited {
+header li a, a:visited {
     text-decoration: none;
-    color: blue;
+    color:inherit;
 }
 
 .topnav {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    height: 60px;
 }
 
 body {
@@ -61,7 +66,7 @@ main {
     width: 80vw;
     min-height: fit-content;
     background-color: white;
-    border-left: 2px solid rgba(128, 128, 128, 0.301);
+    border-left: 1px solid rgba(128, 128, 128, 0.301);
     
 }
 
@@ -74,12 +79,22 @@ main {
 }
 
 .categories li {
-    color: blue;
+    color: rgb(246, 71, 27);
     padding: 0;
+    width: 100%;
+    list-style: inside;
+    text-align: center;
 }
 
+
+
+.categories li:hover {
+    background-color: rgba(149, 149, 149, 0.275);
+}
+
+
 .categories li span {
-    color: rgb(85, 85, 85)
+    color: rgb(85, 85, 85);
 }
 
 .category {
@@ -112,6 +127,12 @@ main {
     display: flex;
     flex-direction: row;
     gap: 20px;
+    font-weight: lighter;
+}
+
+
+.right h3, .left h3 {
+    font-weight: lighter;
 }
 
 .post {
@@ -130,4 +151,13 @@ main {
 .posts .right {
     gap: 55px;
 }
+
+img {
+   object-fit: contain;
+   padding: 10px;
+   margin-left: 6%;
+  
+}
+
+
 

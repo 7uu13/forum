@@ -35,7 +35,6 @@ func GetUserByUsername(db *sql.DB, username string) (model.User, error) {
 }
 
 func CreateUser(db *sql.DB, user model.User) (int64, error) {
-	fmt.Println("jah.")
 	insertStmt := `INSERT INTO users (username, age, gender, firstname, lastname, email, password) VALUES (?, ?, ?, ?, ?, ?, ?)`
 
 	stmt, err := db.Prepare(insertStmt)
@@ -57,7 +56,6 @@ func CreateUser(db *sql.DB, user model.User) (int64, error) {
 }
 
 func AuthenticateUser(db *sql.DB, username, password string) (model.User, error) {
-	fmt.Println(username)
 	user, err := GetUserByUsername(db, username)
 	if err != nil {
 		return model.User{}, err
