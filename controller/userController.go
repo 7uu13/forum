@@ -1,12 +1,12 @@
 package controller
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"net/http"
 	"strconv"
-	"database/sql"
-	"html/template"
 
 	"github.com/7uu13/forum/model"
 	"github.com/7uu13/forum/service"
@@ -84,7 +84,6 @@ func CreateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 func Login(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 
@@ -106,7 +105,7 @@ func Login(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 		_, err := service.AuthenticateUser(db, username, password)
 
-		er := Error {
+		er := Error{
 			Message: "Incorrect Username or Password",
 		}
 

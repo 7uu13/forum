@@ -3,7 +3,7 @@ package service
 import (
 	"database/sql"
 
-	"github.com/7uu13/forum/model"	
+	"github.com/7uu13/forum/model"
 )
 
 func CreatePost(db *sql.DB, post model.Post) (int64, error) {
