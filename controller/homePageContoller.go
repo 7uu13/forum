@@ -29,6 +29,7 @@ func HomePage(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	category, err := GetCurrentCategory(db, category_slug)
 
 	if err != nil {
+		// agh
 		// If category not found, return not found html
 		tmpl, err := template.ParseGlob("templates/notFound.html")
 		if err != nil {
