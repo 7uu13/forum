@@ -32,3 +32,7 @@ type PostCategories struct {
 	PostId     int
 	CategoryId int
 }
+
+func (u *User) ClearSensitiveData() {
+	u.Password = ""
+}

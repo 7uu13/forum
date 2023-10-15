@@ -13,6 +13,7 @@ import (
 	"github.com/7uu13/forum/middleware"
 	"github.com/7uu13/forum/model"
 	"github.com/7uu13/forum/service"
+	//"github.com/7uu13/forum/dto"
 )
 
 type Error struct {
@@ -146,32 +147,42 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func UserProfile(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
+// func UserProfile(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+// 	switch r.Method {
 
-	case "GET":
-		cookie, err := r.Cookie("session")
-		if err != nil {
-			if err == http.ErrNoCookie {
-				http.Redirect(w, r, "/login", http.StatusSeeOther)
-				return
-			}
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-			return
-		}
+// 	case "GET":
+// 		cookie, err := r.Cookie("session")
+// 		if err != nil {
+// 			if err == http.ErrNoCookie {
+// 				http.Redirect(w, r, "/login", http.StatusSeeOther)
+// 				return
+// 			}
+// 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+// 			return
+// 		}
 	
-		sessionToken := cookie.Value
-		user, err := service.GetUserFromSessionToken(db, sessionToken)
-		if err != nil {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
-			return
-		}
-		fmt.Println(user.Username)
-		tmpl := template.Must(template.ParseFiles("templates/userProfile.html"))
-		tmpl.Execute(w, nil)
+// 		sessionToken := cookie.Value
+
+// 		user, err := service.GetUserFromSessionToken(db, sessionToken)
+// 		if err != nil {
+// 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+// 			return
+// 		}
+// 		//fmt.Println(user.Username)
+
+// 		//userDTO := dto.NewUserDTO(user)
+
+// 		//tmpl := template.Must(template.ParseFiles("templates/userProfile.html"))
+// 		tmpl, err := template.ParseFiles("userProfile.html")
+// 		if err != nil {
+// 			http.Error(w, err.Error(), http.StatusInternalServerError)
+// 			return
+// 		}
+// 		fmt.Println(user.Username)
+// 		tmpl.Execute(w, user)
 		
-	default:
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-}
+// 	default:
+// 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+// 		return
+// 	}
+// }
