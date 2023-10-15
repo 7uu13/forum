@@ -39,7 +39,7 @@ func main() {
 	})
 
 	http.HandleFunc("/me", func(w http.ResponseWriter, r *http.Request) {
-		controller.Profilepage(w, r)
+		controller.Profilepage(db, w, r)
 	})
 
 	http.HandleFunc("/category", func(w http.ResponseWriter, r *http.Request) {

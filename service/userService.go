@@ -24,9 +24,9 @@ func GetUserByID(db *sql.DB, id int) (model.User, error) {
 func GetUserByUsername(db *sql.DB, username string) (model.User, error) {
 	var user model.User
 
-	stmt := `SELECT id, username, password FROM users WHERE username=?`
+	stmt := `SELECT * FROM users WHERE username=?`
 
-	err := db.QueryRow(stmt, username).Scan(&user.Id, &user.Username, &user.Password)
+	err := db.QueryRow(stmt, username).Scan(&user.Id, &user.Username, &user.Age, &user.Gender, &user.FirstName, &user.LastName, &user.Email, &user.Password)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return user, fmt.Errorf("User not found")
@@ -62,7 +62,6 @@ func AuthenticateUser(db *sql.DB, username, password string) (model.User, error)
 	if err != nil {
 		return model.User{}, err
 	}
-
 	// err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if user.Password != password {
 		return model.User{}, fmt.Errorf("Password doesn't match")
@@ -77,7 +76,6 @@ func GetUserFromSessionToken(db *sql.DB, sessionToken string) (model.User, error
 	}
 	// we shouldnt send out the password but it will work for now
 	user, err := GetUserByUsername(db, userFromSession.Username)
-	fmt.Println(user.Username)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return user, fmt.Errorf("User not found")

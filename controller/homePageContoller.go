@@ -1,13 +1,15 @@
 package controller
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"database/sql"
 
 	//"github.com/google/uuid"
 	"github.com/7uu13/forum/middleware"
+	"github.com/7uu13/forum/service"
+	"github.com/7uu13/forum/dto"
 )
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
@@ -55,7 +57,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	// w.Write([]byte(fmt.Sprintf("Welcome %s!", userSession.Username)))
 }
 
-func Profilepage(w http.ResponseWriter, r *http.Request) {
+func Profilepage(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	c, err := r.Cookie("test")
 	if err != nil {
@@ -81,17 +83,21 @@ func Profilepage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	user, err := service.GetUserFromSessionToken(db, sessionToken) 
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+
+	userDTO := dto.NewUserDTO(user)
 	tmpl, err := template.ParseGlob("Templates/userProfile.html")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	err = tmpl.Execute(w, r)
+	
+	err = tmpl.Execute(w, userDTO)
 
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println(c.Value)
 
 }
