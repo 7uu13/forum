@@ -1,16 +1,24 @@
-package service
+package types
 
 import (
-	"database/sql"
 	"fmt"
+	"time"
 
-	"github.com/7uu13/forum/model"
+	"github.com/7uu13/forum/config"
 )
 
-func CreatePost(db *sql.DB, post model.Post) (int64, error) {
+type Post struct {
+	Id      int
+	Title   string
+	Content string
+	Created time.Time
+	UserId  int
+}
+
+func (p *Post) CreatePost(post Post) (int64, error) {
 	insertStmt := `INSERT INTO posts (title, content, created, user_id) VALUES (?, ?, ?, ?)`
 
-	stmt, err := db.Prepare(insertStmt)
+	stmt, err := config.DB.Prepare(insertStmt)
 	if err != nil {
 		return 0, err
 	}
@@ -28,13 +36,13 @@ func CreatePost(db *sql.DB, post model.Post) (int64, error) {
 	return postID, nil
 }
 
-func GetCategoryPosts(db *sql.DB, category model.Categories) ([]model.Post, error) {
+func (p *Post) GetCategoryPosts(category Categories) ([]Post, error) {
 	stmt := `
 	SELECT * FROM posts_category
 	INNER JOIN posts ON posts_categories.post_id = posts.id
 	`
-	var posts []model.Post
-	res, err := db.Query(stmt)
+	var posts []Post
+	res, err := config.DB.Query(stmt)
 	if err != nil {
 		panic(err)
 	}
@@ -42,7 +50,7 @@ func GetCategoryPosts(db *sql.DB, category model.Categories) ([]model.Post, erro
 	defer res.Close()
 
 	for res.Next() {
-		var post model.Post
+		var post Post
 		err = res.Scan(&post.Id, &post.Title, &post.Content, &post.Created, &post.UserId)
 		if err != nil {
 			panic(err)

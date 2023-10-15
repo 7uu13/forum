@@ -1,16 +1,16 @@
 package controller
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
 
-	"github.com/7uu13/forum/model"
-	"github.com/7uu13/forum/service"
+	"github.com/7uu13/forum/types"
 )
 
-func CategoryController(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+type CategoryController struct{}
+
+func (_ *CategoryController) CategoryController(w http.ResponseWriter, r *http.Request) {
 	/*
 		Categories controller
 
@@ -25,13 +25,13 @@ func CategoryController(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "GET":
-		categories := []model.Categories{}
+		categories := []types.Categories{}
 		var err error
 
 		if category_slug == "" {
-			categories, err = service.GetCategories(db) // Get all categories
+			categories, err = category.GetCategories() // Get all categories
 		} else {
-			categories, err = service.GetCategoryBySlug(db, category_slug) // Get category by slug
+			categories, err = category.GetCategoryBySlug(category_slug) // Get category by slug
 		}
 
 		if err != nil {
@@ -53,5 +53,4 @@ func CategoryController(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	case "POST":
 		fmt.Println("POST")
 	}
-
 }
