@@ -92,30 +92,14 @@
 
         </div>
         <div class="sidebar">
-            <p>Categories: </p>
-           <ul class="categories"></ul>
+           <p>Categories: </p>
+           <ul class="categories">
+                {{range .Categories}}
+                <li class="category"><span>{{.Name}}</span></li>
+                {{end}}
+           </ul>
         </div>
-        <script>
-            const response = fetch("/category", {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                const categories = document.querySelector(".categories");
-                data.forEach(category => {
-                    const li = document.createElement("li");
-                    li.classList.add("category");
-                    const link = document.createElement("a");
-                    link.innerText = category.Name;
-                    link.href = `/category/${category.Id}`;
-                    li.appendChild(link);
-                    categories.appendChild(li);
-                });
-            })
-        </script>
+        
     </main>
     <footer>
         

@@ -18,5 +18,19 @@
             </ul>
         </nav>
     </header>
+    
+    <h1>{{ .Username }}</h1>
+    <p>{{ .FirstName }}</p>
+    <p>{{ .LastName }}</p>
+    <p>{{ .Email }}</p>
+    <div class="delete-form">
+        <form action="/me" method="POST" enctype="application/json">
+            <div class="input-area">
+                <label for="username">Delete Account:</label>
+                <input type="text" id="Delete-confirm" name="Delete-confirm" placeholder="Type DELETE to delete your account"><br><br>
+                <input type="submit" value="DELETE" class="signup-button">
+            </div>
+        </form>
+    </div>
 </body>
 </html>

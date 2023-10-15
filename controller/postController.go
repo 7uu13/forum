@@ -13,25 +13,14 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	// TODO: Implement Session Authentication for this handler
 	// TODO: Check if user is logged in, if not redirect to login page
 	// TODO: Get User ID from session
-
-	/*
-		Post controller
-
-		GET - Return HTML where user can create post
-		GET ?category=test - Return posts from category
-
-		DELETE - Delete post
-		POST - Create post
-		PUT - Update post
-
-	*/
-	const temp_user_id = 123
+	const temp_user_id = 123123123
 
 	switch r.Method {
 	case "GET":
 		http.ServeFile(w, r, "templates/createPost.html")
 
 	case "POST":
+		fmt.Println("POST")
 		err := r.ParseForm()
 		if err != nil {
 			http.Error(w, "Invalid JSON", http.StatusBadRequest)
