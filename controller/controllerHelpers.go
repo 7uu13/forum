@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func renderProfilePage(w http.ResponseWriter, templatePath string, data interface{}) {
+func RenderPage(w http.ResponseWriter, templatePath string, data interface{}) {
 	tmpl, err := template.ParseGlob(templatePath)
 	if err != nil {
 		log.Fatal(err)
@@ -19,7 +19,7 @@ func renderProfilePage(w http.ResponseWriter, templatePath string, data interfac
 	}
 }
 
-func respondWithJSON(w http.ResponseWriter, status int, data interface{}) {
+func RespondWithJSON(w http.ResponseWriter, status int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	if err := json.NewEncoder(w).Encode(data); err != nil {
