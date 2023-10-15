@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"encoding/json"
-	"errors"
+	//"errors"
 
 	"github.com/7uu13/forum/middleware"
 	"github.com/7uu13/forum/dto"
@@ -70,38 +70,23 @@ func HomePage(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// Siia mingi vastav loogika seose cookidega, ala enne ei saa likeda kui pole cookiet
-
-	// c, err := r.Cookie("test")
-	// if err != nil {
-	// 	if err == http.ErrNoCookie {
-	// 		w.WriteHeader(http.StatusUnauthorized)
-	// 		return
-	// 	}
-
-	// 	w.WriteHeader(http.StatusBadRequest)
-	// 	return
-	// }
-	// sessionToken := c.Value
-
-	// userSession, exists := middleware.Sessions[sessionToken]
-	// if !exists {
-	// 	w.WriteHeader(http.StatusUnauthorized)
-	// 	return
-	// }
-
-	// if userSession.IsExpired() {
-	// 	delete(middleware.Sessions, sessionToken)
-	// 	w.WriteHeader(http.StatusUnauthorized)
-	// 	return
-	// }
-
-	// w.Write([]byte(fmt.Sprintf("Welcome %s!", userSession.Username)))
 }
 
-func Profilepage(w http.ResponseWriter, r *http.Request) {
+func GetCurrentCategory(db *sql.DB, category string) (model.Categories, error) {
+	if category != "" {
+		categories, err := service.GetCategoryBySlug(db, category)
+		if err != nil || len(categories) == 0 {
+			return model.Categories{}, err
+		}
+		return categories[0], nil
+	}
+	return model.Categories{}, nil
 
-	c, err := r.Cookie("test")
+}
+
+func Profilepage(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	// Step 1: Authenticate the user and retrieve session information.
+	_, username, user, err := middleware.GetSessionInfo(db, w, r)
 	if err != nil {
 		return
 	}

@@ -2,10 +2,8 @@ package service
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 
-	"github.com/7uu13/forum/middleware"
 	"github.com/7uu13/forum/model"
 )
 
