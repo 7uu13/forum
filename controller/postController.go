@@ -1,15 +1,17 @@
 package controller
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 
-	"github.com/7uu13/forum/model"
-	"github.com/7uu13/forum/service"
+	"github.com/7uu13/forum/types"
 )
 
-func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+type PostController struct{}
+
+var post types.Post
+
+func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 	// TODO: Implement Session Authentication for this handler
 	// TODO: Check if user is logged in, if not redirect to login page
 	// TODO: Get User ID from session
@@ -29,7 +31,7 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "GET":
-		http.ServeFile(w, r, "templates/createPost.html")
+		http.ServeFile(w, r, "ui/templates/createPost.html")
 
 	case "POST":
 		err := r.ParseForm()
@@ -41,13 +43,13 @@ func CreatePost(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		title := r.FormValue("title")
 		content := r.FormValue("content")
 
-		post := &model.Post{
+		post := &types.Post{
 			Title:   title,
 			Content: content,
 			UserId:  temp_user_id,
 		}
 
-		_, err = service.CreatePost(db, *post)
+		_, err = post.CreatePost(*post)
 
 		if err != nil {
 			fmt.Println(err)

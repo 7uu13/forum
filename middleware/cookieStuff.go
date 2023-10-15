@@ -4,11 +4,11 @@ import (
 	"time"
 )
 
-var Sessions =  make(map[string]Session)
+var Sessions = make(map[string]Session)
 
 type Session struct {
 	Username string
-	Expiry time.Time
+	Expiry   time.Time
 }
 
 func (s Session) IsExpired() bool {

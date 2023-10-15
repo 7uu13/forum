@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"database/sql"
+	//"database/sql"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -9,22 +9,26 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/7uu13/forum/middleware"
-	"github.com/7uu13/forum/model"
-	"github.com/7uu13/forum/service"
-	//"github.com/7uu13/forum/dto"
+	"github.com/7uu13/forum/types"
+	"github.com/google/uuid"
+	//"github.com/7uu13/forum/service"
+	"github.com/7uu13/forum/dto"
 )
 
 type Error struct {
 	Message string
 }
 
-func CreateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+type UserController struct{}
+
+var user types.User
+
+func (_ *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 
 	case "GET":
-		http.ServeFile(w, r, "templates/signup.html")
+		http.ServeFile(w, r, "ui/templates/signup.html")
 
 	case "POST":
 		err := r.ParseForm()
@@ -40,7 +44,7 @@ func CreateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		user := model.User{
+		user := types.User{
 			Username:  r.FormValue("username"),
 			Age:       age,
 			Gender:    r.FormValue("gender"),
@@ -50,7 +54,7 @@ func CreateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 			Password:  r.FormValue("password"),
 		}
 
-		userID, err := service.CreateUser(db, user)
+		userID, err := user.CreateUser(user)
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, "Error creating user", http.StatusInternalServerError)
@@ -67,14 +71,14 @@ func CreateUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Login(db *sql.DB, w http.ResponseWriter, r *http.Request) {
+func (_ *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 
 	case "GET":
 
-		tmpl := template.Must(template.ParseFiles("templates/login.html"))
+		tmpl := template.Must(template.ParseFiles("ui/templates/login.html"))
 		tmpl.Execute(w, nil)
-		//http.ServeFile(w, r, "templates/login.html")
+		// http.ServeFile(w, r, "templates/login.html")
 
 	case "POST":
 
@@ -86,33 +90,31 @@ func Login(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 
-		_, err := service.AuthenticateUser(db, username, password)
+		_, err := user.AuthenticateUser(username, password)
 
 		er := Error{
 			Message: "Incorrect Username or Password",
 		}
 
 		if err != nil {
-			tmpl := template.Must(template.ParseFiles("templates/login.html"))
+			tmpl := template.Must(template.ParseFiles("ui/templates/login.html"))
 			w.WriteHeader(http.StatusUnauthorized)
 			tmpl.Execute(w, er)
-			//http.Error(w, "Wrong Username or Password", http.StatusUnauthorized)
+			// http.Error(w, "Wrong Username or Password", http.StatusUnauthorized)
 		}
 
-		// cookie logic for testing only
 		sessionToken := uuid.NewString()
 
 		expiresAt := time.Now().Add(120 * time.Second)
 
-		middleware.Sessions[sessionToken] = middleware.Session {
+		middleware.Sessions[sessionToken] = middleware.Session{
 			Username: username,
-			Expiry: expiresAt,
+			Expiry:   expiresAt,
 		}
 
-
-		http.SetCookie(w, &http.Cookie {
-			Name: "test",
-			Value: sessionToken,
+		http.SetCookie(w, &http.Cookie{
+			Name:    "test",
+			Value:   sessionToken,
 			Expires: expiresAt,
 		})
 
@@ -124,7 +126,7 @@ func Login(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Logout(w http.ResponseWriter, r *http.Request) {
+func (_ *UserController) Logout(w http.ResponseWriter, r *http.Request) {
 	c, err := r.Cookie("test")
 	if err != nil {
 		if err == http.ErrNoCookie {
@@ -139,50 +141,42 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 
 	delete(middleware.Sessions, sessionToken)
 
-	http.SetCookie(w, &http.Cookie {
-		Name: "test",
-		Value: "",
+	http.SetCookie(w, &http.Cookie{
+		Name:    "test",
+		Value:   "",
 		Expires: time.Now(),
 	})
-
 }
 
-// func UserProfile(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-// 	switch r.Method {
+func (_ *UserController) ProfilePage(w http.ResponseWriter, r *http.Request) {
+	_, username, user, err := middleware.GetSessionInfo(w, r)
+	if err != nil {
+		return
+	}
 
-// 	case "GET":
-// 		cookie, err := r.Cookie("session")
-// 		if err != nil {
-// 			if err == http.ErrNoCookie {
-// 				http.Redirect(w, r, "/login", http.StatusSeeOther)
-// 				return
-// 			}
-// 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 			return
-// 		}
-	
-// 		sessionToken := cookie.Value
+	switch r.Method {
+	case http.MethodGet:
+		userDTO := dto.NewUserDTO(user)
+		renderProfilePage(w, "ui/templates/userProfile.html", userDTO)
 
-// 		user, err := service.GetUserFromSessionToken(db, sessionToken)
-// 		if err != nil {
-// 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
-// 			return
-// 		}
-// 		//fmt.Println(user.Username)
+	case http.MethodPost:
+		err := r.ParseForm()
+		if err != nil {
+			http.Error(w, "Invalid JSON", http.StatusBadRequest)
+			return
+		}
 
-// 		//userDTO := dto.NewUserDTO(user)
+		deleteAccount := r.FormValue("Delete-confirm")
+		if deleteAccount == "DELETE" {
+			userID, _ := user.DeleteUser(username)
+			response := map[string]int64{"id": userID}
+			respondWithJSON(w, http.StatusCreated, response)
+		} else {
+			http.Error(w, "Invalid action", http.StatusBadRequest)
+		}
 
-// 		//tmpl := template.Must(template.ParseFiles("templates/userProfile.html"))
-// 		tmpl, err := template.ParseFiles("userProfile.html")
-// 		if err != nil {
-// 			http.Error(w, err.Error(), http.StatusInternalServerError)
-// 			return
-// 		}
-// 		fmt.Println(user.Username)
-// 		tmpl.Execute(w, user)
-		
-// 	default:
-// 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-// 		return
-// 	}
-// }
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+}
