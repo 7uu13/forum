@@ -31,3 +31,20 @@ func GetCategories(db *sql.DB) ([]model.Categories, error) {
 
 	return categories, nil
 }
+
+func GetCategoryBySlug(db *sql.DB, slug string) ([]model.Categories, error) {
+	var categories []model.Categories
+	var category model.Categories
+	stmt := `SELECT * FROM categories WHERE name_slug = ?`
+
+	err := db.QueryRow(stmt, slug).Scan(&category.Id, &category.Name, &category.Name_slug)
+	categories = append(categories, category)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return categories, err
+		}
+		return categories, err
+	}
+	return categories, nil
+}
