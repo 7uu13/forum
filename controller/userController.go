@@ -1,19 +1,15 @@
 package controller
 
 import (
-	//"database/sql"
-	"encoding/json"
 	"fmt"
-	"html/template"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/7uu13/forum/dto"
 	"github.com/7uu13/forum/middleware"
 	"github.com/7uu13/forum/types"
 	"github.com/google/uuid"
-	//"github.com/7uu13/forum/service"
-	"github.com/7uu13/forum/dto"
 )
 
 type Error struct {
@@ -62,12 +58,7 @@ func (_ *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 		}
 
 		response := map[string]int64{"id": userID}
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusCreated)
-		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, "Error with encoding response", http.StatusInternalServerError)
-			return
-		}
+		RespondWithJSON(w, http.StatusCreated, response)
 	}
 }
 
@@ -76,9 +67,7 @@ func (_ *UserController) Login(w http.ResponseWriter, r *http.Request) {
 
 	case "GET":
 
-		tmpl := template.Must(template.ParseFiles("ui/templates/login.html"))
-		tmpl.Execute(w, nil)
-		// http.ServeFile(w, r, "templates/login.html")
+		RenderPage(w, "ui/templates/login.html", nil)
 
 	case "POST":
 
@@ -97,10 +86,7 @@ func (_ *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if err != nil {
-			tmpl := template.Must(template.ParseFiles("ui/templates/login.html"))
-			w.WriteHeader(http.StatusUnauthorized)
-			tmpl.Execute(w, er)
-			// http.Error(w, "Wrong Username or Password", http.StatusUnauthorized)
+			RenderPage(w, "ui/templates/login.html", er)
 		}
 
 		sessionToken := uuid.NewString()
@@ -157,9 +143,9 @@ func (_ *UserController) ProfilePage(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		userDTO := dto.NewUserDTO(user)
-		renderProfilePage(w, "ui/templates/userProfile.html", userDTO)
+		RenderPage(w, "ui/templates/userProfile.html", userDTO)
 
-	case http.MethodPost:
+	case http.MethodDelete:
 		err := r.ParseForm()
 		if err != nil {
 			http.Error(w, "Invalid JSON", http.StatusBadRequest)
@@ -170,7 +156,7 @@ func (_ *UserController) ProfilePage(w http.ResponseWriter, r *http.Request) {
 		if deleteAccount == "DELETE" {
 			userID, _ := user.DeleteUser(username)
 			response := map[string]int64{"id": userID}
-			respondWithJSON(w, http.StatusCreated, response)
+			RespondWithJSON(w, http.StatusCreated, response)
 		} else {
 			http.Error(w, "Invalid action", http.StatusBadRequest)
 		}
