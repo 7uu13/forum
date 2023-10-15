@@ -33,6 +33,7 @@ func GetCategories(db *sql.DB) ([]model.Categories, error) {
 }
 
 func GetCategoryBySlug(db *sql.DB, slug string) ([]model.Categories, error) {
+	// Comment
 	var categories []model.Categories
 	var category model.Categories
 	stmt := `SELECT * FROM categories WHERE name_slug = ?`
