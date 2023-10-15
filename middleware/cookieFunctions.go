@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/7uu13/forum/model"
+	"github.com/7uu13/forum/service"
 )
 
 func GetSessionInfo(db *sql.DB, w http.ResponseWriter, r *http.Request) (string, string, model.User, error) {
@@ -49,22 +50,7 @@ func GetUserFromSessionToken(db *sql.DB, sessionToken string) (model.User, error
 		return model.User{}, errors.New("Session not found")
 	}
 	// we shouldnt send out the password but it will work for now
-	user, err := GetUserByUsername(db, userFromSession.Username)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return user, fmt.Errorf("User not found")
-		}
-		return user, err
-	}
-	return user, nil
-}
-
-func GetUserByUsername(db *sql.DB, username string) (model.User, error) {
-	var user model.User
-
-	stmt := `SELECT * FROM users WHERE username=?`
-
-	err := db.QueryRow(stmt, username).Scan(&user.Id, &user.Username, &user.Age, &user.Gender, &user.FirstName, &user.LastName, &user.Email, &user.Password)
+	user, err := service.GetUserByUsername(db, userFromSession.Username)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return user, fmt.Errorf("User not found")

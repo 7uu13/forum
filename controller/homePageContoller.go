@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"encoding/json"
-	"errors"
 
 	"github.com/7uu13/forum/middleware"
 	"github.com/7uu13/forum/dto"
@@ -44,8 +43,7 @@ func HomePage(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func Profilepage(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	// Step 1: Authenticate the user and retrieve session information.
-	_, username, user, err := GetSessionInfo(db, w, r)
+	_, _, user, err := middleware.GetSessionInfo(db, w, r)
 	if err != nil {
 		return
 	}
@@ -55,23 +53,25 @@ func Profilepage(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		// Step 2: Handle the GET request.
 		userDTO := dto.NewUserDTO(user)
 		renderProfilePage(w, "Templates/userProfile.html", userDTO)
-
-	case http.MethodPost:
-		// Step 3: Handle the POST request.
-		err := r.ParseForm()
-		if err != nil {
-			http.Error(w, "Invalid JSON", http.StatusBadRequest)
-			return
-		}
+		//TODO: the delete user part of the function was the cause of import cycle, thus need to fix it
 		
-		deleteAccount := r.FormValue("Delete-confirm")
-		if deleteAccount == "DELETE" {
-			userID, _ := service.DeleteUser(db, username)
-			response := map[string]int64{"id": userID}
-			respondWithJSON(w, http.StatusCreated, response)
-		} else {
-			http.Error(w, "Invalid action", http.StatusBadRequest)
-		}
+	// case http.MethodPost:
+	// 	// Step 3: Handle the POST request.
+	// 	err := r.ParseForm()
+	// 	if err != nil {
+	// 		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+	// 		return
+	// 	}
+		
+	// 	deleteAccount := r.FormValue("Delete-confirm")
+
+	// 	if deleteAccount == "DELETE" {
+	// 		userID, _ := service.DeleteUser(db, username)
+	// 		response := map[string]int64{"id": userID}
+	// 		respondWithJSON(w, http.StatusCreated, response)
+	// 	} else {
+	// 		http.Error(w, "Invalid action", http.StatusBadRequest)
+	// 	}
 
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)

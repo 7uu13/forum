@@ -2,10 +2,8 @@ package service
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 
-	"github.com/7uu13/forum/middleware"
 	"github.com/7uu13/forum/model"
 )
 
@@ -79,16 +77,5 @@ func DeleteUser(db *sql.DB, username string) (int64, error) {
 	return userID, nil
 }
 
-func AuthenticateUser(db *sql.DB, username, password string) (model.User, error) {
-	user, err := GetUserByUsername(db, username)
-	if err != nil {
-		return model.User{}, err
-	}
-	// err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
-	if user.Password != password {
-		return model.User{}, fmt.Errorf("Password doesn't match")
-	}
-	return user, nil
-}
 
 

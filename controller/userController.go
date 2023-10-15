@@ -86,7 +86,7 @@ func Login(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 
-		_, err := service.AuthenticateUser(db, username, password)
+		_, err := middleware.AuthenticateUser(db, username, password)
 
 		er := Error{
 			Message: "Incorrect Username or Password",
@@ -146,43 +146,3 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	})
 
 }
-
-// func UserProfile(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-// 	switch r.Method {
-
-// 	case "GET":
-// 		cookie, err := r.Cookie("session")
-// 		if err != nil {
-// 			if err == http.ErrNoCookie {
-// 				http.Redirect(w, r, "/login", http.StatusSeeOther)
-// 				return
-// 			}
-// 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-// 			return
-// 		}
-	
-// 		sessionToken := cookie.Value
-
-// 		user, err := service.GetUserFromSessionToken(db, sessionToken)
-// 		if err != nil {
-// 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
-// 			return
-// 		}
-// 		//fmt.Println(user.Username)
-
-// 		//userDTO := dto.NewUserDTO(user)
-
-// 		//tmpl := template.Must(template.ParseFiles("templates/userProfile.html"))
-// 		tmpl, err := template.ParseFiles("userProfile.html")
-// 		if err != nil {
-// 			http.Error(w, err.Error(), http.StatusInternalServerError)
-// 			return
-// 		}
-// 		fmt.Println(user.Username)
-// 		tmpl.Execute(w, user)
-		
-// 	default:
-// 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-// 		return
-// 	}
-// }
