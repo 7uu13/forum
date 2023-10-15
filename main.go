@@ -46,7 +46,9 @@ func main() {
 		controller.CategoryController(db, w, r)
 	})
 
-	http.HandleFunc("/", controller.HomePage)
+	http.HandleFunc("/",  func(w http.ResponseWriter, r *http.Request) {
+		controller.HomePage(db, w, r)
+	})
 	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
 
 	fmt.Printf("Starting server at port 8080\n")

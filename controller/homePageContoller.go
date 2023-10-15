@@ -1,29 +1,42 @@
 package controller
 
 import (
+	"database/sql"
+	
+
 	"html/template"
 	"log"
 	"net/http"
-	"database/sql"
-
 	//"github.com/google/uuid"
 	"github.com/7uu13/forum/middleware"
-	"github.com/7uu13/forum/service"
+
 	"github.com/7uu13/forum/dto"
+	"github.com/7uu13/forum/model"
+	"github.com/7uu13/forum/service"
+
 )
 
-func HomePage(w http.ResponseWriter, r *http.Request) {
+func HomePage(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
 	}
-	tmpl, err := template.ParseGlob("templates/home.html")
+
+	categories, err := service.GetCategories(db)
+
+	data := struct {
+		Categories []model.Categories
+	}{
+		Categories: categories,
+	}
+	
+	tmpl, err := template.ParseGlob("templates/home2.html")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = tmpl.Execute(w, r)
+	err = tmpl.Execute(w, data)
 
 	if err != nil {
 		log.Fatal(err)
