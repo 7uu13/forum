@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Forum</title>
-    <link rel="stylesheet" href="/assets/style.css" type="text/css"/>
+    <link rel="stylesheet" href="/assets/style.css" type="text/css" />
   </head>
   <body>
     <header>
@@ -19,12 +19,16 @@
       </nav>
     </header>
     <main class="home">
-        <div class="posts-container">
-          <h1>{{.CurrentPost.Title}}</h1>
-          <p>{{.CurrentPost.Content}}</p>
-          <button value='0'>Dislike</button>
-          <button value='1'>Like</button>
-          </div>
+      <div class="posts-container">
+        <h1>{{.CurrentPost.Title}}</h1>
+        <p>{{.CurrentPost.Content}}</p>
+        <form id="rating-form" method="POST" action="/handle-rating?post_id={{.CurrentPost.Id}}" >
+          <button value="0" name="rating">{{.CurrentPostDislikes}} Dislike</button>
+        </form>
+        <form id="rating-form" method="POST" action="/handle-rating?post_id={{.CurrentPost.Id}}" >
+          <button value="1" name="rating">{{.CurrentPostLikes}} Like</button>
+        </form>
+      </div>
       <div class="sidebar">
         <p>Categories:</p>
         <ul class="categories">
