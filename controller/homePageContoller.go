@@ -11,19 +11,25 @@ import (
 type HomePageController struct{}
 
 var category types.Categories
+var postRating types.PostRating
 
 func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 	// Define the data structure to pass to templates
 	data := struct {
-		Categories      []types.Categories
-		CurrentCategory types.Categories
-		CurrentPost     types.Post
-		Posts           []types.Post
+		Categories          []types.Categories
+		CurrentCategory     types.Categories
+		CurrentPost         types.Post
+		CurrentPostDislikes int
+		CurrentPostLikes    int
+
+		Posts []types.Post
 	}{
-		Categories:      []types.Categories{},
-		CurrentCategory: types.Categories{},
-		CurrentPost:     types.Post{},
-		Posts:           []types.Post{},
+		Categories:          []types.Categories{},
+		CurrentCategory:     types.Categories{},
+		CurrentPost:         types.Post{},
+		CurrentPostDislikes: 0,
+		CurrentPostLikes:    0,
+		Posts:               []types.Post{},
 	}
 
 	// Check if the URL path is not root, return not found template
@@ -48,14 +54,17 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 	categorySlug := r.URL.Query().Get("category")
 
 	if postID != "" {
-		post, err := post.GetPostById(postID)
+		currentPost, err := post.GetPostById(postID)
+		dislikes, likes, err := postRating.GetPostRatings(postID)
+		data.CurrentPostDislikes = dislikes
+		data.CurrentPostLikes = likes
 
 		if err != nil {
 			renderNotFoundTemplate(w, r)
 			return
 		}
 
-		data.CurrentPost = post
+		data.CurrentPost = currentPost
 		renderTemplate("ui/templates/post.html", w, data)
 
 	} else if categorySlug != "" {
