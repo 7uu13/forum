@@ -70,7 +70,7 @@ body {
 }
 
 
-.posts-container {
+.category-container {
 
     width: 80vw;
     min-height: fit-content;
@@ -279,7 +279,7 @@ img {
     padding: 3px;
 }
 
-.signup-container label, h2 {
+.signup-container label, .signup-main h2 {
     text-align: center;
 }
 
@@ -426,3 +426,60 @@ img {
       opacity: 0;
     }
   }
+
+  .posts-container {
+    width: 80vw;
+    min-height: fit-content;
+    background-color: white;
+    border-left: 1px solid rgba(128, 128, 128, 0.301);
+}
+
+.posts-container h1 {
+    margin-left: 70px;
+    margin-top: 30px;
+    margin-right: 70px;
+    font-size: 30px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.posts-container h2 {
+    margin: 0px 70px 0px 70px;
+    font-size: 20px;
+    font-weight: 300;
+    border-bottom: 1px solid gray;  
+    color:#d1170a;
+    padding-bottom: 20px;
+}
+
+.posts-container p {
+    width: 800px;
+    margin-left: 70px;
+    margin-right: 70px;
+    font-weight: 300;
+}
+
+.ratings {
+    display: flex;
+    flex-direction: row;
+    margin-left: 70px;
+    gap: 10px;
+}
+
+.ratings button {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid gray;
+}
+
+.like {
+    background-color: rgb(119, 238, 119);
+}
+
+.dislike {
+    background-color:rgb(241, 99, 99);
+}
+
+.posts-container .name {
+    font-weight: 400;
+}

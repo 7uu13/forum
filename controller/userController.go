@@ -132,6 +132,8 @@ func (_ *UserController) Logout(w http.ResponseWriter, r *http.Request) {
 		Value:   "",
 		Expires: time.Now(),
 	})
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func (_ *UserController) ProfilePage(w http.ResponseWriter, r *http.Request) {

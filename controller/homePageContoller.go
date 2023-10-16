@@ -54,6 +54,13 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 	categorySlug := r.URL.Query().Get("category")
 
 	if postID != "" {
+		category, err := category.GetCurrentCategory(categorySlug)
+
+		if err != nil || category.Id == 0 {
+			renderNotFoundTemplate(w, r)
+			return
+		}
+		data.CurrentCategory = category
 		currentPost, err := post.GetPostById(postID)
 		dislikes, likes, err := postRating.GetPostRatings(postID)
 		data.CurrentPostDislikes = dislikes
