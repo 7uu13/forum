@@ -46,46 +46,18 @@
           </div>
         </div>
         <div class="posts">
-          <div class="post">
+          {{range .Posts}}
+          <a class="post" href="?post={{.Id}}">
             <div class="left">
-              <div class="topic">Topic1</div>
+              <div class="topic">{{.Title}}</div>
             </div>
             <div class="right">
-              <div class="replies">10</div>
-              <div class="views">123</div>
-              <div class="activity">Okt 10</div>
+              <div class="replies">X</div>
+              <div class="views">X</div>
+              <div class="activity">X</div>
             </div>
-          </div>
-          <div class="post">
-            <div class="left">
-              <div class="topic">Topic1</div>
-            </div>
-            <div class="right">
-              <div class="replies">10</div>
-              <div class="views">123</div>
-              <div class="activity">Okt 10</div>
-            </div>
-          </div>
-          <div class="post">
-            <div class="left">
-              <div class="topic">Topic1</div>
-            </div>
-            <div class="right">
-              <div class="replies">10</div>
-              <div class="views">123</div>
-              <div class="activity">Okt 10</div>
-            </div>
-          </div>
-          <div class="post">
-            <div class="left">
-              <div class="topic">Topic1</div>
-            </div>
-            <div class="right">
-              <div class="replies">10</div>
-              <div class="views">123</div>
-              <div class="activity">Okt 10</div>
-            </div>
-          </div>
+          </a>
+          {{end}}
         </div>
       </div>
       <div class="sidebar">

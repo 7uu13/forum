@@ -101,6 +101,10 @@ body {
     background-color: rgba(149, 149, 149, 0.275);
 }
 
+.category a, a:visited{
+    color: inherit;
+}
+
 
 .categories li span {
     color: black;

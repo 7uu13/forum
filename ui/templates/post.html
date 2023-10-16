@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Forum</title>
+    <link rel="stylesheet" href="/assets/style.css" type="text/css"/>
+  </head>
+  <body>
+    <header>
+      <nav class="topnav">
+        <img src="/assets/images/logo.png" alt="Logo" />
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/login">Login</a></li>
+          <li><a href="/logout">Logout</a></li>
+          <li><a href="/me">Profile</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main class="home">
+        <div class="posts-container">
+        </div>
+      <div class="sidebar">
+        <p>Categories:</p>
+        <ul class="categories">
+          {{range .Categories}}
+          <li class="category">
+            <span><a href="?category={{.Name_slug}}"> {{.Name}} </a> </span>
+          </li>
+          {{end}}
+        </ul>
+      </div>
+    </main>
+    <footer></footer>
+  </body>
+</html>

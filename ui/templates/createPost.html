@@ -14,12 +14,11 @@
         <textarea id="content" name="content" rows="4" required></textarea><br><br>
 
         <label for="select-category"></label>
-        <select>
+        <select name="category">
             {{range .Categories}}
-            <option>{{.Name}}</option>
+            <option value="{{.Id}}">{{.Name}}</option>
             {{end}}
         </select>
-
         <input type="submit" value="Submit">
     </form>
 </body>
