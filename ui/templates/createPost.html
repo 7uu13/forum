@@ -13,6 +13,13 @@
         <label for="content">Content:</label><br>
         <textarea id="content" name="content" rows="4" required></textarea><br><br>
 
+        <label for="select-category"></label>
+        <select>
+            {{range .Categories}}
+            <option>{{.Name}}</option>
+            {{end}}
+        </select>
+
         <input type="submit" value="Submit">
     </form>
 </body>

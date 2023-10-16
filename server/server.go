@@ -39,7 +39,7 @@ func (s *Server) Start() error {
 
 	http.HandleFunc("/", homePageController.HomePage)
 
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("assets"))))
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("ui/assets"))))
 
 	fmt.Println("Server running at port", s.ListenAddress)
 	return http.ListenAndServe(s.ListenAddress, nil)

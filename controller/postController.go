@@ -2,6 +2,8 @@ package controller
 
 import (
 	"fmt"
+	"html/template"
+	"log"
 	"net/http"
 
 	"github.com/7uu13/forum/types"
@@ -29,9 +31,33 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 	*/
 	const temp_user_id = 123
 
+
+	categories, err := category.GetCategories()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		data := struct {
+			Categories      []types.Categories
+			CurrentCategory types.Categories
+		}{
+			Categories:      categories,
+			CurrentCategory: category,
+		}
+
 	switch r.Method {
 	case "GET":
-		http.ServeFile(w, r, "ui/templates/createPost.html")
+
+		tmpl, err := template.ParseGlob("ui/templates/createPost.html")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = tmpl.Execute(w, data)
+
+		if err != nil {
+			log.Fatal(err)
+		}
 
 	case "POST":
 		err := r.ParseForm()
@@ -48,6 +74,7 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 			Content: content,
 			UserId:  temp_user_id,
 		}
+		
 
 		_, err = post.CreatePost(*post)
 
