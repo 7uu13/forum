@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/7uu13/forum/types"
 )
@@ -31,19 +32,18 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 	*/
 	const temp_user_id = 123
 
-
 	categories, err := category.GetCategories()
-		if err != nil {
-			log.Fatal(err)
-		}
+	if err != nil {
+		log.Fatal(err)
+	}
 
-		data := struct {
-			Categories      []types.Categories
-			CurrentCategory types.Categories
-		}{
-			Categories:      categories,
-			CurrentCategory: category,
-		}
+	data := struct {
+		Categories      []types.Categories
+		CurrentCategory types.Categories
+	}{
+		Categories:      categories,
+		CurrentCategory: category,
+	}
 
 	switch r.Method {
 	case "GET":
@@ -66,21 +66,43 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// Form values ->
 		title := r.FormValue("title")
 		content := r.FormValue("content")
+		category_IdStr := r.FormValue("category")
 
+		// Convert string to int
+		category_Id, err := strconv.Atoi(category_IdStr)
+
+		if err != nil {
+			category_Id = 0
+		}
+
+		// Post Structure
 		post := &types.Post{
 			Title:   title,
 			Content: content,
 			UserId:  temp_user_id,
 		}
-		
 
-		_, err = post.CreatePost(*post)
+		// Create post -> returns post id
+		postID, err := post.CreatePost(*post)
 
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, "Error creating post", http.StatusInternalServerError)
+			return
+		}
+
+		postsCategory := &types.PostCategories{
+			CategoryId: int(category_Id),
+			PostId:     int(postID),
+		}
+
+		_, err = category.CreatePostCategory(*&postsCategory)
+		if err != nil {
+			fmt.Println(err)
+			http.Error(w, "Error creating posts category", http.StatusInternalServerError)
 			return
 		}
 
