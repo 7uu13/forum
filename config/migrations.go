@@ -41,3 +41,14 @@ CREATE TABLE IF NOT EXISTS posts_category (
 	foreign key (category_id) REFERENCES categories (id)
 );
 `
+
+const PostRatingTable = `
+CREATE TABLE IF NOT EXISTS posts_rating (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	post_id INTEGER,
+	user_id INTEGER,
+	rating INTEGER,
+	foreign key (post_id) REFERENCES posts (id),
+	foreign key (user_id) REFERENCES users (id)
+);
+`

@@ -10,6 +10,7 @@ func Run() {
 	migrate(DB, PostTable)
 	migrate(DB, CategoryTable)
 	migrate(DB, PostCategoryTable)
+	migrate(DB, PostRatingTable)
 }
 
 func migrate(db *sql.DB, query string) {
