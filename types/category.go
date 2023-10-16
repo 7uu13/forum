@@ -71,3 +71,24 @@ func (c *Categories) GetCurrentCategory(cat string) (Categories, error) {
 	}
 	return *c, nil
 }
+
+func (c *Categories) CreatePostCategory(postCategories *PostCategories) (int64, error) {
+	insertStmt := `INSERT INTO posts_category (post_id, category_id) VALUES (?, ?)`
+
+	stmt, err := config.DB.Prepare(insertStmt)
+	if err != nil {
+		return 0, err
+	}
+
+	result, err := stmt.Exec(postCategories.PostId, postCategories.CategoryId)
+	if err != nil {
+		return 0, err
+	}
+
+	postCategoryID, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return postCategoryID, nil
+}
