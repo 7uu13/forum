@@ -15,6 +15,13 @@ type Post struct {
 	UserId  int
 }
 
+type PostRating struct {
+	Id     int
+	PostId int
+	UserId int
+	Rating int
+}
+
 func (p *Post) CreatePost(post Post) (int64, error) {
 	insertStmt := `INSERT INTO posts (title, content, created, user_id) VALUES (?, ?, ?, ?)`
 
@@ -87,4 +94,94 @@ func (p *Post) GetPostById(id string) (Post, error) {
 		return post, err
 	}
 	return post, nil
+}
+
+func (p *PostRating) HandlePostRating(id, user_id int, rating string) {
+	stmt := `SELECT * FROM posts_rating WHERE post_id = ? AND user_id = ?`
+	err := config.DB.QueryRow(stmt, id, user_id).Scan(&p.Id, &p.PostId, &p.UserId, &p.Rating)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			p.CreatePostRating(id, user_id, rating)
+		}
+	}
+
+	p.UpdatePostRating(id, user_id, rating)
+}
+
+func (p *PostRating) CreatePostRating(id int, user_id int, rating string) (int64, error) {
+	insertStmt := `INSERT INTO posts_rating (post_id, user_id, rating) VALUES (?, ?, ?)`
+
+	stmt, err := config.DB.Prepare(insertStmt)
+	if err != nil {
+		return 0, err
+	}
+
+	result, err := stmt.Exec(id, user_id, rating)
+	if err != nil {
+		return 0, err
+	}
+
+	postID, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return postID, nil
+}
+
+func (p *PostRating) UpdatePostRating(id, user_id int, rating string) (int64, error) {
+
+	updateStmt := `UPDATE posts_rating SET rating = ? WHERE post_id = ? AND user_id = ?`
+
+	stmt, err := config.DB.Prepare(updateStmt)
+	if err != nil {
+		return 0, err
+	}
+
+	result, err := stmt.Exec(rating, id, user_id)
+	if err != nil {
+		return 0, err
+	}
+
+	postID, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return postID, nil
+}
+
+func (p *PostRating) GetPostRatings(id string) (int, int, error) {
+	/*
+		Iterates through all the ratings for a post and returns the number of likes and dislikes
+	*/
+	stmt := `SELECT * FROM posts_rating WHERE post_id = ?`
+
+	dislikes := 0
+	likes := 0
+
+	res, err := config.DB.Query(stmt, id)
+	if err != nil {
+		panic(err)
+	}
+
+	defer res.Close()
+
+	for res.Next() {
+		var postRating PostRating
+		err = res.Scan(&postRating.Id, &postRating.PostId, &postRating.UserId, &postRating.Rating)
+
+		if err != nil {
+			panic(err)
+		}
+
+		if postRating.Rating == 0 {
+			dislikes++
+		} else {
+			likes++
+		}
+	}
+
+	return dislikes, likes, err
 }
