@@ -17,10 +17,12 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		Categories      []types.Categories
 		CurrentCategory types.Categories
+		CurrentPost     types.Post
 		Posts           []types.Post
 	}{
 		Categories:      []types.Categories{},
 		CurrentCategory: types.Categories{},
+		CurrentPost:     types.Post{},
 		Posts:           []types.Post{},
 	}
 
@@ -53,7 +55,7 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		data.Posts = append(data.Posts, post)
+		data.CurrentPost = post
 		renderTemplate("ui/templates/post.html", w, data)
 
 	} else if categorySlug != "" {

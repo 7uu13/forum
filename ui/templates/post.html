@@ -20,7 +20,11 @@
     </header>
     <main class="home">
         <div class="posts-container">
-        </div>
+          <h1>{{.CurrentPost.Title}}</h1>
+          <p>{{.CurrentPost.Content}}</p>
+          <button value='0'>Dislike</button>
+          <button value='1'>Like</button>
+          </div>
       <div class="sidebar">
         <p>Categories:</p>
         <ul class="categories">
