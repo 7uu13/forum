@@ -1,7 +1,7 @@
 package types
 
 import (
-	"fmt"
+	"database/sql"
 	"time"
 
 	"github.com/7uu13/forum/config"
@@ -37,12 +37,20 @@ func (p *Post) CreatePost(post Post) (int64, error) {
 }
 
 func (p *Post) GetCategoryPosts(category Categories) ([]Post, error) {
+
+	if category.Id == 0 {
+		return nil, nil
+	}
+
 	stmt := `
-	SELECT * FROM posts_category
-	INNER JOIN posts ON posts_categories.post_id = posts.id
+	SELECT posts.*
+	FROM posts
+	JOIN posts_category ON posts.id = posts_category.post_id
+	WHERE posts_category.category_id = ?
 	`
+
 	var posts []Post
-	res, err := config.DB.Query(stmt)
+	res, err := config.DB.Query(stmt, category.Id)
 	if err != nil {
 		panic(err)
 	}
@@ -63,6 +71,20 @@ func (p *Post) GetCategoryPosts(category Categories) ([]Post, error) {
 		return nil, err
 	}
 
-	fmt.Println(posts)
 	return posts, nil
+}
+
+func (p *Post) GetPostById(id string) (Post, error) {
+	var post Post
+	stmt := `SELECT * FROM posts WHERE id = ?`
+
+	err := config.DB.QueryRow(stmt, id).Scan(&post.Id, &post.Title, &post.Content, &post.Created, &post.UserId)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return post, err
+		}
+		return post, err
+	}
+	return post, nil
 }
