@@ -8,10 +8,11 @@ import (
 )
 
 var (
-	userController     controller.UserController
-	postController     controller.PostController
-	categoryController controller.CategoryController
-	homePageController controller.HomePageController
+	userController         controller.UserController
+	postController         controller.PostController
+	categoryController     controller.CategoryController
+	homePageController     controller.HomePageController
+	handleRatingController controller.RatingController
 )
 
 type Server struct {
@@ -36,6 +37,8 @@ func (s *Server) Start() error {
 	http.HandleFunc("/create", postController.CreatePost)
 
 	http.HandleFunc("/category", categoryController.CategoryController)
+
+	http.HandleFunc("/handle-rating", handleRatingController.RatingController)
 
 	http.HandleFunc("/", homePageController.HomePage)
 
