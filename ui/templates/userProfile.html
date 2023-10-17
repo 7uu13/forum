@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="assets/style.css">
 </head>
+
 <body>
     <header>
         <nav class="topnav">
@@ -18,19 +20,27 @@
             </ul>
         </nav>
     </header>
-    
-    <h1>{{ .Username }}</h1>
-    <p>{{ .FirstName }}</p>
-    <p>{{ .LastName }}</p>
-    <p>{{ .Email }}</p>
-    <div class="delete-form">
-        <form action="/me" method="DELETE" enctype="application/json">
-            <div class="input-area">
-                <label for="username">Delete Account:</label>
-                <input type="text" id="Delete-confirm" name="Delete-confirm" placeholder="Type DELETE to delete your account"><br><br>
-                <input type="submit" value="DELETE" class="signup-button">
-            </div>
-        </form>
-    </div>
+    <main class="user">
+        <h1>Profile Page</h1>
+            <div class="user-info">
+                <p>Username: <span>{{ .Username }}</span></p>
+                <p>First Name: <span>{{ .FirstName }}</span></p>
+                <p>Last Name: <span>{{ .LastName }}</span></p>
+                <p class="email">Email: <span>{{ .Email }}</span></p>
+        </div>
+        <div class="delete-form">
+            <div>
+                <form action="/me" method="DELETE" enctype="application/json">
+                    <div class="input-area">
+                        <label for="username">Delete Account:</label>
+                        <input class="delete-confirm" type="text" id="Delete-confirm" name="Delete-confirm"
+                            placeholder="Type DELETE to delete your account"><br><br>
+                        <input class="delete" type="submit" value="DELETE" class="signup-button">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
 </body>
+
 </html>
