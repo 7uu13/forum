@@ -75,7 +75,7 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		content, err := postReply.GetPostReplies(postID)
-		
+
 		if err != nil {
 			renderNotFoundTemplate(w, r)
 			return

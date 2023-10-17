@@ -23,13 +23,16 @@ type PostRating struct {
 }
 
 type PostReply struct {
-	Id int
-	PostId int
-	UserId int
+	Id      int
+	PostId  int
+	UserId  int
 	Content string
 }
 
 func (p *Post) CreatePost(post Post) (int64, error) {
+	current_time := time.Now()  // Get the current timestamp
+	post.Created = current_time // Set the Created field to the current timestamp
+
 	insertStmt := `INSERT INTO posts (title, content, created, user_id) VALUES (?, ?, ?, ?)`
 
 	stmt, err := config.DB.Prepare(insertStmt)
@@ -234,7 +237,7 @@ func (p *PostReply) GetPostReplies(id string) ([]PostReply, error) {
 		if err != nil {
 			panic(err)
 		}
-		postReplies = append(postReplies,postReply)
+		postReplies = append(postReplies, postReply)
 	}
 	return postReplies, err
 }
