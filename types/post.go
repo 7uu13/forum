@@ -22,6 +22,13 @@ type PostRating struct {
 	Rating int
 }
 
+type PostReply struct {
+	Id int
+	PostId int
+	UserId int
+	Content string
+}
+
 func (p *Post) CreatePost(post Post) (int64, error) {
 	insertStmt := `INSERT INTO posts (title, content, created, user_id) VALUES (?, ?, ?, ?)`
 
@@ -184,4 +191,50 @@ func (p *PostRating) GetPostRatings(id string) (int, int, error) {
 	}
 
 	return dislikes, likes, err
+}
+
+func (p *PostReply) CreatePostReply(id int, user_id int, content string) (int64, error) {
+	insertStmt := `INSERT INTO posts_replies (post_id, user_id, content) VALUES (?, ?, ?)`
+
+	stmt, err := config.DB.Prepare(insertStmt)
+	if err != nil {
+		return 0, err
+	}
+
+	result, err := stmt.Exec(id, user_id, content)
+	if err != nil {
+		return 0, err
+	}
+
+	postID, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return postID, nil
+}
+
+func (p *PostReply) GetPostReplies(id string) ([]PostReply, error) {
+	/*
+		Iterates through all the ratings for a post and returns the number of likes and dislikes
+	*/
+	stmt := `SELECT * FROM posts_replies WHERE post_id = ?`
+
+	var postReplies []PostReply
+	res, err := config.DB.Query(stmt, id)
+	if err != nil {
+		panic(err)
+	}
+
+	defer res.Close()
+
+	for res.Next() {
+		var postReply PostReply
+		err = res.Scan(&postReply.Id, &postReply.PostId, &postReply.UserId, &postReply.Content)
+		if err != nil {
+			panic(err)
+		}
+		postReplies = append(postReplies,postReply)
+	}
+	return postReplies, err
 }

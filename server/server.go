@@ -13,6 +13,7 @@ var (
 	categoryController     controller.CategoryController
 	homePageController     controller.HomePageController
 	handleRatingController controller.RatingController
+	handleReplyController  controller.ReplyController
 )
 
 type Server struct {
@@ -39,6 +40,8 @@ func (s *Server) Start() error {
 	http.HandleFunc("/category", categoryController.CategoryController)
 
 	http.HandleFunc("/handle-rating", handleRatingController.RatingController)
+
+	http.HandleFunc("/handle-reply", handleReplyController.ReplyController)
 
 	http.HandleFunc("/", homePageController.HomePage)
 

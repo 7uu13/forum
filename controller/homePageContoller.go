@@ -12,6 +12,7 @@ type HomePageController struct{}
 
 var category types.Categories
 var postRating types.PostRating
+var postReply types.PostReply
 
 func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 	// Define the data structure to pass to templates
@@ -19,6 +20,7 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 		Categories          []types.Categories
 		CurrentCategory     types.Categories
 		CurrentPost         types.Post
+		CurrentPostReplies  []types.PostReply
 		CurrentPostDislikes int
 		CurrentPostLikes    int
 
@@ -27,6 +29,7 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 		Categories:          []types.Categories{},
 		CurrentCategory:     types.Categories{},
 		CurrentPost:         types.Post{},
+		CurrentPostReplies:  []types.PostReply{},
 		CurrentPostDislikes: 0,
 		CurrentPostLikes:    0,
 		Posts:               []types.Post{},
@@ -62,14 +65,24 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 		}
 		data.CurrentCategory = category
 		currentPost, err := post.GetPostById(postID)
-		dislikes, likes, err := postRating.GetPostRatings(postID)
-		data.CurrentPostDislikes = dislikes
-		data.CurrentPostLikes = likes
-
 		if err != nil {
 			renderNotFoundTemplate(w, r)
 			return
 		}
+		dislikes, likes, err := postRating.GetPostRatings(postID)
+		if err != nil {
+			renderNotFoundTemplate(w, r)
+			return
+		}
+		content, err := postReply.GetPostReplies(postID)
+		
+		if err != nil {
+			renderNotFoundTemplate(w, r)
+			return
+		}
+		data.CurrentPostReplies = content
+		data.CurrentPostDislikes = dislikes
+		data.CurrentPostLikes = likes
 
 		data.CurrentPost = currentPost
 		renderTemplate("ui/templates/post.html", w, data)

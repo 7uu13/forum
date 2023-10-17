@@ -480,6 +480,11 @@ img {
     background-color:rgb(241, 99, 99);
 }
 
+.reply-textarea {
+    width: 300px;
+    margin-top: 20px;
+}
+
 .posts-container .name {
     font-weight: 400;
 }
@@ -542,4 +547,9 @@ img {
     color: white;
     background-color: #db1709;
     font-weight: 600;
+}
+
+.reply-container {
+    display: flex;
+    flex-direction: column;
 }

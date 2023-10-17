@@ -31,6 +31,33 @@
           <form id="rating-form" method="POST" action="/handle-rating?post_id={{.CurrentPost.Id}}" >
             <button value="1" name="rating" class="like">{{.CurrentPostLikes}} Like</button>
           </form>
+          <form id="reply-form" method="POST" action="/handle-reply?post_id={{.CurrentPost.Id}}">
+            <button class="reply-button">Reply</button>
+            <textarea class="reply-textarea" style="display: none;" name="content"></textarea>
+            <input type="submit">
+          </form>
+          <script>
+            document.addEventListener("DOMContentLoaded", function () {
+            var replyButtons = document.querySelectorAll(".reply-button");
+
+            replyButtons.forEach(function (button) {
+                button.addEventListener("click", function (e) {
+                    e.preventDefault();  // Prevent the default form submission
+                    var textarea = this.nextElementSibling;
+                    if (textarea.style.display === "none" || textarea.style.display === "") {
+                        textarea.style.display = "block";
+                    } else {
+                        textarea.style.display = "none";
+                    }
+                });
+            });
+        });
+        </script>
+        <div class="reply-container">
+          {{range .CurrentPostReplies}}
+          <p>{{.Content}}</p>
+          {{end}}
+        </div>
       </div>
       </div>
       <div class="sidebar">
