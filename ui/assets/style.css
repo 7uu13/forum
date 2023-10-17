@@ -483,6 +483,12 @@ img {
 .reply-textarea {
     width: 300px;
     margin-top: 20px;
+    margin-left: -130px;
+    margin-bottom: 10px;
+}
+
+.submit-reply {
+    margin-left: -130px;
 }
 
 .posts-container .name {
@@ -552,4 +558,17 @@ img {
 .reply-container {
     display: flex;
     flex-direction: column;
+}
+
+
+
+.ratings {
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(128, 128, 128, 0.6);
+    margin-right: 70px;
+}
+
+.reply-container span {
+    border-bottom: 1px solid rgba(128, 128, 128, 0.346);
+    margin: 0px 70px 0px 70px;
 }

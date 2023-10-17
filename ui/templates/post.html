@@ -1,76 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Forum</title>
-    <link rel="stylesheet" href="/assets/style.css" type="text/css" />
-  </head>
-  <body>
-    <header>
-      <nav class="topnav">
-        <img src="/assets/images/logo.png" alt="Logo" />
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/login">Login</a></li>
-          <li><a href="/logout">Logout</a></li>
-          <li><a href="/me">Profile</a></li>
-        </ul>
-      </nav>
-    </header>
-    <main class="home">
-      <div class="posts-container">
-        <h1 class="post-title">{{.CurrentPost.Title}}</h1>
-        <h2>{{.CurrentCategory.Name}}</h2>
-        <p class="name">Postitaja nimi</p>
-        <p>{{.CurrentPost.Content}}</p>
-        <div class="ratings">
-          <form id="rating-form" method="POST" action="/handle-rating?post_id={{.CurrentPost.Id}}" >
-            <button value="0" name="rating" class="dislike">{{.CurrentPostDislikes}} Dislike</button>
-          </form>
-          <form id="rating-form" method="POST" action="/handle-rating?post_id={{.CurrentPost.Id}}" >
-            <button value="1" name="rating" class="like">{{.CurrentPostLikes}} Like</button>
-          </form>
-          <form id="reply-form" method="POST" action="/handle-reply?post_id={{.CurrentPost.Id}}">
-            <button class="reply-button">Reply</button>
-            <textarea class="reply-textarea" style="display: none;" name="content"></textarea>
-            <input type="submit">
-          </form>
-          <script>
-            document.addEventListener("DOMContentLoaded", function () {
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forum</title>
+  <link rel="stylesheet" href="/assets/style.css" type="text/css" />
+</head>
+
+<body>
+  <header>
+    <nav class="topnav">
+      <img src="/assets/images/logo.png" alt="Logo" />
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/logout">Logout</a></li>
+        <li><a href="/me">Profile</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main class="home">
+    <div class="posts-container">
+      <h1 class="post-title">{{.CurrentPost.Title}}</h1>
+      <h2>{{.CurrentCategory.Name}}</h2>
+      <p class="name">Postitaja nimi</p>
+      <p>{{.CurrentPost.Content}}</p>
+      <div class="ratings">
+        <form id="rating-form" method="POST" action="/handle-rating?post_id={{.CurrentPost.Id}}">
+          <button value="0" name="rating" class="dislike">{{.CurrentPostDislikes}} Dislike</button>
+        </form>
+        <form id="rating-form" method="POST" action="/handle-rating?post_id={{.CurrentPost.Id}}">
+          <button value="1" name="rating" class="like">{{.CurrentPostLikes}} Like</button>
+        </form>
+        <form id="reply-form" method="POST" action="/handle-reply?post_id={{.CurrentPost.Id}}">
+          <button class="reply-button">Reply</button>
+          <textarea class="reply-textarea" style="display: none;" name="content" required></textarea>
+          <input type="submit" class="submit-reply" style="display: none;"> <!-- Initially hidden -->
+        </form>
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
             var replyButtons = document.querySelectorAll(".reply-button");
 
             replyButtons.forEach(function (button) {
-                button.addEventListener("click", function (e) {
-                    e.preventDefault();  // Prevent the default form submission
-                    var textarea = this.nextElementSibling;
-                    if (textarea.style.display === "none" || textarea.style.display === "") {
-                        textarea.style.display = "block";
-                    } else {
-                        textarea.style.display = "none";
-                    }
-                });
+              button.addEventListener("click", function (e) {
+                e.preventDefault();  // Prevent the default form submission
+                var textarea = this.nextElementSibling;
+                var submitButton = textarea.nextElementSibling; // Select the next sibling, the submit button
+                if (textarea.style.display === "none" || textarea.style.display === "") {
+                  textarea.style.display = "block";
+                  submitButton.style.display = "block"; // Show the submit button
+                } else {
+                  textarea.style.display = "none";
+                  submitButton.style.display = "none"; // Hide the submit button
+                }
+              });
             });
-        });
+          });
         </script>
-        <div class="reply-container">
-          {{range .CurrentPostReplies}}
-          <p>{{.Content}}</p>
-          {{end}}
-        </div>
       </div>
+      <div class="reply-container">
+        {{range .CurrentPostReplies}}
+        <p class="name">{{.UserId}}</p>
+        <p class="reply">{{.Content}}</p>
+        <span></span>
+        {{end}}
       </div>
-      <div class="sidebar">
-        <p>Categories:</p>
-        <ul class="categories">
-          {{range .Categories}}
-          <li class="category">
-            <span><a href="?category={{.Name_slug}}"> {{.Name}} </a> </span>
-          </li>
-          {{end}}
-        </ul>
-      </div>
-    </main>
-    <footer></footer>
-  </body>
+    </div>
+    <div class="sidebar">
+      <p>Categories:</p>
+      <ul class="categories">
+        {{range .Categories}}
+        <li class="category">
+          <span><a href="?category={{.Name_slug}}"> {{.Name}} </a> </span>
+        </li>
+        {{end}}
+      </ul>
+    </div>
+  </main>
+  <footer></footer>
+</body>
+
 </html>
