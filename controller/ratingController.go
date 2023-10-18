@@ -26,6 +26,7 @@ func (_ *RatingController) RatingController(w http.ResponseWriter, r *http.Reque
 		user_id := 12345
 		post_id_string := r.URL.Query().Get("post_id")
 		rating_id_string := r.URL.Query().Get("rating_id")
+		referer := r.Header.Get("Referer")
 
 		// Define a common function to process ratings.
 		processRating := func(id int, rating string, handleFunc func(int, int, string)) {
@@ -47,27 +48,25 @@ func (_ *RatingController) RatingController(w http.ResponseWriter, r *http.Reque
 			}
 
 			handleFunc(id, user_id, ratingValue)
+			http.Redirect(w, r, referer, http.StatusSeeOther)
 		}
 
 		if post_id_string != "" {
-
 			postID, err := strconv.Atoi(post_id_string)
+
 			if err != nil {
 				http.Error(w, "Invalid post_id", http.StatusBadRequest)
 				return
 			}
 			processRating(postID, "rating", postRating.HandlePostRating)
-			http.Redirect(w, r, "/?post="+post_id_string, http.StatusSeeOther)
 
 		} else if rating_id_string != "" {
-			referer := r.Header.Get("Referer")
 			ratingID, err := strconv.Atoi(rating_id_string)
 			if err != nil {
 				http.Error(w, "Invalid rating_id", http.StatusBadRequest)
 				return
 			}
 			processRating(ratingID, "rating", replyRating.HandleReplyRating)
-			http.Redirect(w, r, referer, http.StatusSeeOther)
 		}
 	}
 }
