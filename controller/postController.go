@@ -30,7 +30,7 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 		PUT - Update post
 
 	*/
-	const temp_user_id = 123
+	const temp_user_id = 12345
 
 	categories, err := category.GetCategories()
 	if err != nil {
@@ -106,7 +106,6 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		//w.WriteHeader(http.StatusAccepted)
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		http.Redirect(w, r, "/?post="+strconv.Itoa(int(postID)), http.StatusSeeOther)
 	}
 }

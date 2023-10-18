@@ -586,9 +586,10 @@ img {
 
 .create input {
     padding: 6px;
-    background-color: chartreuse;
+    background-color: rgb(53, 85, 193);
     border: 1px solid rgb(128, 128, 128);
     border-radius: 3px;
+    color: rgb(255, 255, 255);
 }
 
 .create-post-main {
@@ -643,6 +644,18 @@ img {
 .time {
     font-size: 16px;
     color: rgba(26, 26, 26, 0.517);
+}
+
+.create:hover{
+    cursor: pointer;
+}
+
+.posts a, a:visited {
+    color: inherit;
+}
+
+.posts a {
+    text-decoration: none;
 }
 
 

@@ -11,7 +11,7 @@
       <nav class="topnav">
         <img src="/assets/images/logo.png" alt="Logo" />
         <ul>
-          <li><a href="/">Home</a></li>
+          <li><a href="/">Home</a></li> 
           <li><a href="/login">Login</a></li>
           <li><a href="/logout">Logout</a></li>
           <li><a href="/me">Profile</a></li>
@@ -24,17 +24,10 @@
         <div class="filters-create">
         <div class="filters">
           <div class="select">
-            <select name="Filter" id="filters">
-              <option value="">Latest</option>
-              <option value="">Oldest</option>
-              <option value="">Most popular</option>
-            </select>
-          </div>
-          <div class="select">
-            <select name="Categories" id="categories">
-              <option value="">Topic 1</option>
-              <option value="">Topic 2</option>
-              <option value="">Topic 3</option>
+            <select name="Filter" id="filters" onchange="optionFilter()">
+              <option value="" disabled selected>Filter</option>
+              <option value="liked-posts">Liked posts</option>
+              <option value="created-posts">Created posts</option>
             </select>
           </div>
         </div>
@@ -44,22 +37,12 @@
       </div>
         <div class="headers">
           <div class="left"><h3>{{.CurrentCategory.Name}}</h3></div>
-          <div class="right">
-            <h3>Replies</h3>
-            <h3>Views</h3>
-            <h3>Activity</h3>
-          </div>
         </div>
         <div class="posts">
           {{range .Posts}}
           <a class="post" href="?post={{.Id}}">
             <div class="left">
               <div class="topic">{{.Title}}</div>
-            </div>
-            <div class="right">
-              <div class="replies">X</div>
-              <div class="views">X</div>
-              <div class="activity">X</div>
             </div>
           </a>
           {{end}}
@@ -77,5 +60,22 @@
       </div>
     </main>
     <footer></footer>
+    <script>
+      // On page load, set the filter to the one in the url
+      const url = new URL(window.location.href);
+      const filter = url.searchParams.get("filter");
+
+      if (filter != null) {
+        document.getElementById("filters").value = filter;
+      }
+
+    function optionFilter() {
+      // When the filter is changed, change the url
+      value = document.getElementById("filters").value
+      const url = new URL(window.location.href);
+      url.searchParams.set('filter', value);
+      window.location.href = url.toString()
+    }
+    </script>
   </body>
 </html>

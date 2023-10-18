@@ -75,9 +75,11 @@
               {{if ne .Dislikes 1}} {{.Dislikes}} Dislikes {{else}} {{.Dislikes}} Dislike {{end}}
             </button>
           </form>
-          <button value="1" name="rating" class="like" action="/handle-rating?rating_id={{.Id}}">
-            {{if ne .Likes 1}} {{.Likes}} Likes {{else}} {{.Likes}} Like {{end}}
-          </button>
+          <form id="reply-rating"method="POST" action="/handle-rating?rating_id={{.Id}}">
+            <button value="1" name="rating" class="like" action="/handle-rating?rating_id={{.Id}}">
+              {{if ne .Likes 1}} {{.Likes}} Likes {{else}} {{.Likes}} Like {{end}}
+            </button>
+          </form>
         </div>
         <span></span>
         {{end}}

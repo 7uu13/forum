@@ -101,6 +101,81 @@ func (p *Post) GetCategoryPosts(category Categories) ([]Post, error) {
 	return posts, nil
 }
 
+func (p *Post) GetCategoryLikedPosts(category Categories, user_id int) ([]Post, error) {
+	if category.Id == 0 {
+		return nil, nil
+	}
+
+	stmt := `
+	SELECT posts.*
+	FROM posts
+	JOIN posts_category ON posts.id = posts_category.post_id
+	JOIN posts_rating ON posts.id = posts_rating.post_id
+	WHERE posts_category.category_id = ? AND posts_rating.user_id = ? AND posts_rating.rating = 1
+	`
+
+	var posts []Post
+	res, err := config.DB.Query(stmt, category.Id, user_id)
+	if err != nil {
+		panic(err)
+	}
+
+	defer res.Close()
+
+	for res.Next() {
+		var post Post
+		err = res.Scan(&post.Id, &post.Title, &post.Content, &post.Created, &post.UserId)
+		if err != nil {
+			panic(err)
+		}
+
+		posts = append(posts, post)
+	}
+
+	if err := res.Err(); err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}
+
+func (p *Post) GetCategoryCreatedPosts(category Categories, user_id int) ([]Post, error) {
+	if category.Id == 0 {
+		return nil, nil
+	}
+
+	stmt := `
+	SELECT posts.*
+	FROM posts
+	JOIN posts_category ON posts.id = posts_category.post_id
+	WHERE posts_category.category_id = ? AND posts.user_id = ?
+	`
+
+	var posts []Post
+	res, err := config.DB.Query(stmt, category.Id, user_id)
+	if err != nil {
+		panic(err)
+	}
+
+	defer res.Close()
+
+	for res.Next() {
+		var post Post
+		err = res.Scan(&post.Id, &post.Title, &post.Content, &post.Created, &post.UserId)
+		if err != nil {
+			panic(err)
+		}
+
+		posts = append(posts, post)
+	}
+
+	if err := res.Err(); err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}
+
 func (p *Post) GetPostById(id string) (Post, error) {
 	var post Post
 	stmt := `SELECT * FROM posts WHERE id = ?`

@@ -54,6 +54,7 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 	data.Categories = categories
 
 	postID := r.URL.Query().Get("post")
+	filter := r.URL.Query().Get("filter")
 	categorySlug := r.URL.Query().Get("category")
 
 	if postID != "" {
@@ -80,10 +81,10 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 			renderNotFoundTemplate(w, r)
 			return
 		}
+
 		data.CurrentPostReplies = content
 		data.CurrentPostDislikes = dislikes
 		data.CurrentPostLikes = likes
-
 		data.CurrentPost = currentPost
 		renderTemplate("ui/templates/post.html", w, data)
 
@@ -96,7 +97,21 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 		}
 
 		data.CurrentCategory = category
-		posts, err := post.GetCategoryPosts(category)
+
+		var posts []types.Post
+
+		switch filter {
+		case "liked-posts":
+			posts, err = post.GetCategoryLikedPosts(category, 12345)
+			break
+
+		case "created-posts":
+			posts, err = post.GetCategoryCreatedPosts(category, 12345)
+			break
+
+		default:
+			posts, err = post.GetCategoryPosts(category)
+		}
 
 		if err != nil || len(posts) == 0 {
 			log.Println(err)
@@ -105,6 +120,9 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 		data.Posts = posts
 		renderTemplate("ui/templates/home.html", w, data)
 	} else {
+		// when category or post id is not provided, return first category from the database
+		data.CurrentCategory = categories[0]
+		data.Posts, err = post.GetCategoryPosts(categories[0])
 		renderTemplate("ui/templates/home.html", w, data)
 	}
 }
