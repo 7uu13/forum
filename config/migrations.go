@@ -74,3 +74,14 @@ CREATE TABLE IF NOT EXISTS posts_replies_rating (
 	foreign key (user_id) REFERENCES users (id)
 );
 `
+
+const SessionTable = `
+CREATE TABLE IF NOT EXISTS sessions (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	user_id INTEGER,
+	name TEXT,
+	value TEXT,
+	expiration DATETIME,
+	foreign key (user_id) REFERENCES users (id)
+);
+`
