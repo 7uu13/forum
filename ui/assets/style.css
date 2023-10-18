@@ -427,7 +427,20 @@ img {
     }
   }
 
-  .posts-container {
+.post-content{
+    display: flex;
+    flex-direction: column;
+}
+
+.post-separator{
+    height: 1px;
+    width: 73vw;
+    background-color: rgba(128, 128, 128, 0.301);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.posts-container {
     width: 80vw;
     min-height: fit-content;
     background-color: white;
@@ -436,7 +449,7 @@ img {
 
 .posts-container h1 {
     margin-left: 70px;
-    margin-top: 30px;
+    margin-top: 15px;
     margin-right: 70px;
     font-size: 30px;
     font-weight: 500;
@@ -444,7 +457,7 @@ img {
 }
 
 .posts-container h2 {
-    margin: 0px 70px 0px 70px;
+    margin: 30px 70px 0px 70px;
     font-size: 20px;
     font-weight: 300;
     border-bottom: 1px solid gray;  
@@ -563,8 +576,6 @@ img {
 
 
 .ratings {
-    padding-bottom: 10px;
-    border-bottom: 2px solid rgba(128, 128, 128, 0.6);
     margin-right: 70px;
 }
 
@@ -641,9 +652,20 @@ img {
     border: 1px solid gray;
 }
 
+.post-time{
+    font-size: 16px;
+    color: rgba(26, 26, 26, 0.517);
+    margin-bottom: 15px;
+}
+
 .time {
     font-size: 16px;
     color: rgba(26, 26, 26, 0.517);
+    margin-bottom: 0px;
+}
+
+.reply-container .name {
+    margin-top: 0px;
 }
 
 .create:hover{
@@ -658,5 +680,8 @@ img {
     text-decoration: none;
 }
 
+.post-reply {
+    padding-bottom: 10px;
+}
 
 
