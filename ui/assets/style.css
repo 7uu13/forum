@@ -639,3 +639,11 @@ img {
     background-color: chartreuse;
     border: 1px solid gray;
 }
+
+.time {
+    font-size: 16px;
+    color: rgba(26, 26, 26, 0.517);
+}
+
+
+
