@@ -21,6 +21,7 @@
     <main class="home">
       <div class="info"></div>
       <div class="category-container">
+        <div class="filters-create">
         <div class="filters">
           <div class="select">
             <select name="Filter" id="filters">
@@ -37,6 +38,10 @@
             </select>
           </div>
         </div>
+        <form action="/create" class="create">
+          <input type="submit" value="Create Post">
+      </form>
+      </div>
         <div class="headers">
           <div class="left"><h3>{{.CurrentCategory.Name}}</h3></div>
           <div class="right">

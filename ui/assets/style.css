@@ -572,3 +572,21 @@ img {
     border-bottom: 1px solid rgba(128, 128, 128, 0.346);
     margin: 0px 70px 0px 70px;
 }
+
+.filters-create {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.create {
+    margin-top: 30px;
+    margin-right: 70px;
+}
+
+.create input {
+    padding: 6px;
+    background-color: #39ee2594;
+    border: 1px solid rgb(128, 128, 128);
+    border-radius: 3px;
+}
