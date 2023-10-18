@@ -23,16 +23,25 @@ type PostRating struct {
 }
 
 type PostReply struct {
-	Id      int
-	PostId  int
-	UserId  int
-	Content string
-	Created time.Time
+	Id       int
+	PostId   int
+	UserId   int
+	Content  string
+	Created  time.Time
+	Dislikes int
+	Likes    int
+}
+
+type ReplyRating struct {
+	Id          int
+	PostReplyId int
+	UserId      int
+	Rating      int
 }
 
 func (p *Post) CreatePost(post Post) (int64, error) {
-	current_time := time.Now() 
-	post.Created = current_time 
+	current_time := time.Now()
+	post.Created = current_time
 
 	insertStmt := `INSERT INTO posts (title, content, created, user_id) VALUES (?, ?, ?, ?)`
 
@@ -108,7 +117,7 @@ func (p *Post) GetPostById(id string) (Post, error) {
 }
 
 func (p *PostRating) HandlePostRating(id, user_id int, rating string) {
-	stmt := `SELECT * FROM posts_rating WHERE post_id = ? AND user_id = ?`
+	stmt := `SELECT * FROM posts_rating WHERE post_reply_id = ? AND user_id = ?`
 	err := config.DB.QueryRow(stmt, id, user_id).Scan(&p.Id, &p.PostId, &p.UserId, &p.Rating)
 
 	if err != nil {
@@ -118,6 +127,93 @@ func (p *PostRating) HandlePostRating(id, user_id int, rating string) {
 	}
 
 	p.UpdatePostRating(id, user_id, rating)
+}
+
+func (p *ReplyRating) HandleReplyRating(id, user_id int, rating string) {
+	stmt := `SELECT * FROM posts_replies_rating WHERE post_reply_id = ? AND user_id = ?`
+	err := config.DB.QueryRow(stmt, id, user_id).Scan(&p.Id, &p.PostReplyId, &p.UserId, &p.Rating)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			p.CreateReplyRating(id, user_id, rating)
+		}
+	}
+
+	p.UpdateReplyRating(id, user_id, rating)
+}
+
+func (p *ReplyRating) CreateReplyRating(id int, user_id int, rating string) (int64, error) {
+	insertStmt := `INSERT INTO posts_replies_rating (post_reply_id, user_id, rating) VALUES (?, ?, ?)`
+	stmt, err := config.DB.Prepare(insertStmt)
+	if err != nil {
+		return 0, err
+	}
+
+	result, err := stmt.Exec(id, user_id, rating)
+	if err != nil {
+		return 0, err
+	}
+
+	postID, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return postID, nil
+}
+
+func (p *ReplyRating) UpdateReplyRating(id, user_id int, rating string) (int64, error) {
+	updateStmt := `UPDATE posts_replies_rating SET rating = ? WHERE post_reply_id = ? AND user_id = ?`
+
+	stmt, err := config.DB.Prepare(updateStmt)
+	if err != nil {
+		return 0, err
+	}
+
+	result, err := stmt.Exec(rating, id, user_id)
+	if err != nil {
+		return 0, err
+	}
+
+	postID, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return postID, nil
+}
+
+func (p *PostReply) GetReplyRatings(id int) (int, int, error) {
+	/*
+		Iterates through all the ratings for a post and returns the number of likes and dislikes
+	*/
+	stmt := `SELECT * FROM posts_replies_rating WHERE post_reply_id = ?`
+
+	dislikes := 0
+	likes := 0
+
+	res, err := config.DB.Query(stmt, id)
+	if err != nil {
+		panic(err)
+	}
+
+	defer res.Close()
+
+	for res.Next() {
+		var replyRating ReplyRating
+		err = res.Scan(&replyRating.Id, &replyRating.PostReplyId, &replyRating.UserId, &replyRating.Rating)
+
+		if err != nil {
+			panic(err)
+		}
+
+		if replyRating.Rating == 0 {
+			dislikes++
+		} else {
+			likes++
+		}
+	}
+
+	return dislikes, likes, err
 }
 
 func (p *PostRating) CreatePostRating(id int, user_id int, rating string) (int64, error) {
@@ -200,7 +296,6 @@ func (p *PostRating) GetPostRatings(id string) (int, int, error) {
 func (p *PostReply) CreatePostReply(id int, user_id int, content string) (int64, error) {
 	insertStmt := `INSERT INTO posts_replies (post_id, user_id, content, created) VALUES (?, ?, ?, datetime('now', 'localtime'))`
 
-
 	stmt, err := config.DB.Prepare(insertStmt)
 	if err != nil {
 		return 0, err
@@ -235,7 +330,17 @@ func (p *PostReply) GetPostReplies(id string) ([]PostReply, error) {
 
 	for res.Next() {
 		var postReply PostReply
+
+		if err != nil {
+			panic(err)
+		}
+
 		err = res.Scan(&postReply.Id, &postReply.PostId, &postReply.UserId, &postReply.Content, &postReply.Created)
+
+		dislikes, likes, err := p.GetReplyRatings(postReply.Id)
+		postReply.Dislikes = dislikes
+		postReply.Likes = likes
+
 		if err != nil {
 			panic(err)
 		}

@@ -24,20 +24,24 @@
     <div class="posts-container">
       <h1 class="post-title">{{.CurrentPost.Title}}</h1>
       <h2>{{.CurrentCategory.Name}}</h2>
-      <p>Created: {{.CurrentPost.Created}}</p>
+      <p class="time">Created: {{.CurrentPost.Created.Format "15:04 January 2, 2006"}}</p>
       <p class="name">Postitaja nimi</p>
       <p>{{.CurrentPost.Content}}</p>
       <div class="ratings">
         <form id="rating-form" method="POST" action="/handle-rating?post_id={{.CurrentPost.Id}}">
-          <button value="0" name="rating" class="dislike">{{.CurrentPostDislikes}} Dislike</button>
+          <button value="0" name="rating" class="dislike">
+            {{if ne .CurrentPostDislikes 1}} {{.CurrentPostDislikes}} Dislikes {{else}} {{.CurrentPostDislikes}} Dislike {{end}}
+          </button>
         </form>
         <form id="rating-form" method="POST" action="/handle-rating?post_id={{.CurrentPost.Id}}">
-          <button value="1" name="rating" class="like">{{.CurrentPostLikes}} Like</button>
+          <button value="1" name="rating" class="like">
+            {{if ne .CurrentPostLikes 1}} {{.CurrentPostLikes}} Likes {{else}} {{.CurrentPostLikes}} Like {{end}}
+          </button>
         </form>
         <form id="reply-form" method="POST" action="/handle-reply?post_id={{.CurrentPost.Id}}">
           <button class="reply-button">Reply</button>
           <textarea class="reply-textarea" style="display: none;" name="content" required></textarea>
-          <input type="submit" class="submit-reply" style="display: none;"> <!-- Initially hidden -->
+          <input type="submit" class="submit-reply" style="display: none;"> 
         </form>
         <script>
           document.addEventListener("DOMContentLoaded", function () {
@@ -45,15 +49,15 @@
 
             replyButtons.forEach(function (button) {
               button.addEventListener("click", function (e) {
-                e.preventDefault();  // Prevent the default form submission
+                e.preventDefault();  
                 var textarea = this.nextElementSibling;
-                var submitButton = textarea.nextElementSibling; // Select the next sibling, the submit button
+                var submitButton = textarea.nextElementSibling;
                 if (textarea.style.display === "none" || textarea.style.display === "") {
                   textarea.style.display = "block";
-                  submitButton.style.display = "block"; // Show the submit button
+                  submitButton.style.display = "block"; 
                 } else {
                   textarea.style.display = "none";
-                  submitButton.style.display = "none"; // Hide the submit button
+                  submitButton.style.display = "none"; 
                 }
               });
             });
@@ -62,8 +66,19 @@
       </div>
       <div class="reply-container">
         {{range .CurrentPostReplies}}
+        <p class="time">{{.Created.Format "15:04 January 2, 2006"}}</p>
         <p class="name">{{.UserId}}</p>
         <p class="reply">{{.Content}}</p>
+        <div class="ratings">
+          <form id="reply-rating"method="POST" action="/handle-rating?rating_id={{.Id}}">
+            <button value="0" name="rating" class="dislike">
+              {{if ne .Dislikes 1}} {{.Dislikes}} Dislikes {{else}} {{.Dislikes}} Dislike {{end}}
+            </button>
+          </form>
+          <button value="1" name="rating" class="like" action="/handle-rating?rating_id={{.Id}}">
+            {{if ne .Likes 1}} {{.Likes}} Likes {{else}} {{.Likes}} Like {{end}}
+          </button>
+        </div>
         <span></span>
         {{end}}
       </div>

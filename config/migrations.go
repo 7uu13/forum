@@ -64,3 +64,13 @@ CREATE TABLE IF NOT EXISTS posts_replies (
 	foreign key (user_id) REFERENCES users (id)
 );
 `
+const PostRepliesRatingTable = `
+CREATE TABLE IF NOT EXISTS posts_replies_rating (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	post_reply_id INTEGER,
+	user_id INTEGER,
+	rating INTEGER,
+	foreign key (post_reply_id) REFERENCES posts_replies (id),
+	foreign key (user_id) REFERENCES users (id)
+);
+`
