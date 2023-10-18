@@ -38,6 +38,7 @@ func (_ *ReplyController) ReplyController(w http.ResponseWriter, r *http.Request
 			http.Error(w, "Missing parameters", http.StatusBadRequest)
 			return
 		}
+
 		postReply.CreatePostReply(post_id, user_id, content)
 
 		http.Redirect(w, r, "/?post="+post_id_string, http.StatusSeeOther)

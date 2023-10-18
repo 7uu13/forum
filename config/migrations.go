@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS posts_replies (
 	post_id INTEGER,
 	user_id INTEGER,
 	content TEXT,
+	created DATETIME DEFAULT CURRENT_TIMESTAMP,
 	foreign key (post_id) REFERENCES posts (id),
 	foreign key (user_id) REFERENCES users (id)
 );

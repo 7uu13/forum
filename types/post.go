@@ -27,11 +27,12 @@ type PostReply struct {
 	PostId  int
 	UserId  int
 	Content string
+	Created time.Time
 }
 
 func (p *Post) CreatePost(post Post) (int64, error) {
-	current_time := time.Now()  // Get the current timestamp
-	post.Created = current_time // Set the Created field to the current timestamp
+	current_time := time.Now() 
+	post.Created = current_time 
 
 	insertStmt := `INSERT INTO posts (title, content, created, user_id) VALUES (?, ?, ?, ?)`
 
@@ -197,7 +198,8 @@ func (p *PostRating) GetPostRatings(id string) (int, int, error) {
 }
 
 func (p *PostReply) CreatePostReply(id int, user_id int, content string) (int64, error) {
-	insertStmt := `INSERT INTO posts_replies (post_id, user_id, content) VALUES (?, ?, ?)`
+	insertStmt := `INSERT INTO posts_replies (post_id, user_id, content, created) VALUES (?, ?, ?, datetime('now', 'localtime'))`
+
 
 	stmt, err := config.DB.Prepare(insertStmt)
 	if err != nil {
@@ -233,7 +235,7 @@ func (p *PostReply) GetPostReplies(id string) ([]PostReply, error) {
 
 	for res.Next() {
 		var postReply PostReply
-		err = res.Scan(&postReply.Id, &postReply.PostId, &postReply.UserId, &postReply.Content)
+		err = res.Scan(&postReply.Id, &postReply.PostId, &postReply.UserId, &postReply.Content, &postReply.Created)
 		if err != nil {
 			panic(err)
 		}
