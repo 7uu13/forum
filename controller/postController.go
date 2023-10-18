@@ -106,7 +106,7 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		w.WriteHeader(http.StatusAccepted)
-		w.Write([]byte("Post created successfully!"))
+		//w.WriteHeader(http.StatusAccepted)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }

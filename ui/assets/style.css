@@ -586,7 +586,56 @@ img {
 
 .create input {
     padding: 6px;
-    background-color: #39ee2594;
+    background-color: chartreuse;
     border: 1px solid rgb(128, 128, 128);
     border-radius: 3px;
+}
+
+.create-post-main {
+    height: 100vh;
+    display: flex;
+}
+
+.create-post {
+    background-color: #99999928;
+    margin: auto;
+    border-radius: 3px;
+    border: 1px solid gray;
+    width: 500px;
+    height: 500px;
+}
+
+.create-post h1 {
+    font-size: 30px;
+    text-align: center;
+}
+
+.create-post div {
+    margin-left: 70px;
+}
+
+.title input {
+    margin-top: 5px;
+    width: 300px;
+    height: 1.4rem;
+}
+
+.content textarea {
+    width: 300px;
+    height: 5rem;
+    margin-top: 5px;
+}
+
+.create-post-category select {
+    padding: 3px;
+    font-size: 1rem;
+}
+
+.submit-post {
+    margin-left: 80px;
+    margin-top: 10px;
+    font-size: 1rem;
+    padding: 5px 10px 5px 10px;
+    background-color: chartreuse;
+    border: 1px solid gray;
 }
