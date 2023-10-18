@@ -107,6 +107,7 @@ func (_ *UserController) Login(w http.ResponseWriter, r *http.Request) {
 // 	http.Redirect(w, r, "/", http.StatusFound)
 // }
 
+
 func (_ *UserController) ProfilePage(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("session-1")
 	if err != nil {

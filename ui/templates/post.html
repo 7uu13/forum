@@ -20,14 +20,18 @@
     </header>
     <main class="home">
       <div class="posts-container">
-        <h1>{{.CurrentPost.Title}}</h1>
+        <h1 class="post-title">{{.CurrentPost.Title}}</h1>
+        <h2>{{.CurrentCategory.Name}}</h2>
+        <p class="name">Postitaja nimi</p>
         <p>{{.CurrentPost.Content}}</p>
-        <form id="rating-form" method="POST" action="/handle-rating?post_id={{.CurrentPost.Id}}" >
-          <button value="0" name="rating">{{.CurrentPostDislikes}} Dislike</button>
-        </form>
-        <form id="rating-form" method="POST" action="/handle-rating?post_id={{.CurrentPost.Id}}" >
-          <button value="1" name="rating">{{.CurrentPostLikes}} Like</button>
-        </form>
+        <div class="ratings">
+          <form id="rating-form" method="POST" action="/handle-rating?post_id={{.CurrentPost.Id}}" >
+            <button value="0" name="rating" class="dislike">{{.CurrentPostDislikes}} Dislike</button>
+          </form>
+          <form id="rating-form" method="POST" action="/handle-rating?post_id={{.CurrentPost.Id}}" >
+            <button value="1" name="rating" class="like">{{.CurrentPostLikes}} Like</button>
+          </form>
+      </div>
       </div>
       <div class="sidebar">
         <p>Categories:</p>
