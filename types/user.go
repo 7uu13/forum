@@ -52,7 +52,24 @@ func (u *User) GetUserByUsername(username string) (User, error) {
 	return *u, nil
 }
 
-func (u *User) AuthenticateUser(username, password string) (User, error) {
+func (u *User) GetUserFromSession(value string) (User, error) {
+	stmt := `
+	SELECT users.id, users.username, users.age, users.gender, users.firstname, users.lastname, users.email, users.password
+	FROM sessions 
+	JOIN users ON sessions.user_id = users.id 
+	WHERE sessions.value = ?
+	`
+	err := config.DB.QueryRow(stmt, value).Scan(&u.Id, &u.Username, &u.Age, &u.Gender, &u.FirstName, &u.LastName, &u.Email, &u.Password)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return User{}, fmt.Errorf("User not found")
+		}
+		return User{}, err
+	}
+	return *u, nil
+}
+
+func (u *User) CheckCredentials(username, password string) (User, error) {
 	user, err := u.GetUserByUsername(username)
 	if err != nil {
 		return User{}, err
