@@ -117,7 +117,7 @@ func (p *Post) GetPostById(id string) (Post, error) {
 }
 
 func (p *PostRating) HandlePostRating(id, user_id int, rating string) {
-	stmt := `SELECT * FROM posts_rating WHERE post_reply_id = ? AND user_id = ?`
+	stmt := `SELECT * FROM posts_rating WHERE post_id = ? AND user_id = ?`
 	err := config.DB.QueryRow(stmt, id, user_id).Scan(&p.Id, &p.PostId, &p.UserId, &p.Rating)
 
 	if err != nil {
