@@ -118,14 +118,13 @@ func (_ *UserController) Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (_ *UserController) ProfilePage(w http.ResponseWriter, r *http.Request) {
-	cookie, err := r.Cookie("session-1")
-	if err != nil {
+
+	user, err := ValidateSession(w, r)
+	if (err != nil || user == types.User{}) {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
-	//encodedData := base64.StdEncoding.EncodeToString([]byte(cookie.Value))
-	// Retrieve user data from the session cookie
-	user, err := user.GetUserFromSession(cookie.Value)
+
 	if err != nil {
 		http.Error(w, "Error fetching user data", http.StatusInternalServerError)
 		return
