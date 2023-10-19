@@ -17,9 +17,7 @@ type Error struct {
 
 type UserController struct{}
 
-var (
-	user types.User
-)
+var user types.User
 
 func (_ *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
@@ -64,7 +62,6 @@ func (_ *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (_ *UserController) Login(w http.ResponseWriter, r *http.Request) {
-
 	switch r.Method {
 
 	case "GET":
@@ -107,14 +104,13 @@ func (_ *UserController) Login(w http.ResponseWriter, r *http.Request) {
 // 	http.Redirect(w, r, "/", http.StatusFound)
 // }
 
-
 func (_ *UserController) ProfilePage(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("session-1")
 	if err != nil {
 		http.Error(w, "Session cookie not found", http.StatusUnauthorized)
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 	}
-	//encodedData := base64.StdEncoding.EncodeToString([]byte(cookie.Value))
+	// encodedData := base64.StdEncoding.EncodeToString([]byte(cookie.Value))
 	// Retrieve user data from the session cookie
 	user, err := user.GetUserFromSession(cookie.Value)
 	if err != nil {

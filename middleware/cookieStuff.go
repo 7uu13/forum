@@ -21,14 +21,13 @@ var (
 // }
 
 func GenerateCookie(w http.ResponseWriter, r *http.Request, userID int) http.Cookie {
-
 	expiration := time.Now().Add(1 * time.Hour)
 	agent := r.Header.Get("User-Agent")
-	//value, _ := uuid.NewRandom()
+	// value, _ := uuid.NewRandom()
 
-	//data := CookieValue{Agent: agent, Value: value.String()}
+	// data := CookieValue{Agent: agent, Value: value.String()}
 
-	//var buffer bytes.Buffer
+	// var buffer bytes.Buffer
 
 	// err := gob.NewEncoder(&buffer).Encode(&data)
 	// if err != nil {

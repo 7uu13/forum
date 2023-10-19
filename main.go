@@ -16,7 +16,6 @@ func main() {
 
 	config.Run()
 
-
 	server := server.NewServer(":8080")
 	log.Fatal(server.Start())
 

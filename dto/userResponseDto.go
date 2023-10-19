@@ -5,7 +5,7 @@ import (
 )
 
 type UserDTO struct {
-	Id 		  int
+	Id        int
 	Username  string
 	FirstName string
 	LastName  string
@@ -15,7 +15,7 @@ type UserDTO struct {
 // NewUserDTO creates a UserDTO from a User, excluding sensitive fields.
 func NewUserDTO(user types.User) UserDTO {
 	return UserDTO{
-		Id: 	   user.Id,
+		Id:        user.Id,
 		Username:  user.Username,
 		FirstName: user.FirstName,
 		LastName:  user.LastName,

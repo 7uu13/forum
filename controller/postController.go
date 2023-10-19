@@ -73,7 +73,6 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 
 		// Convert string to int
 		category_Id, err := strconv.Atoi(category_IdStr)
-
 		if err != nil {
 			category_Id = 0
 		}
@@ -87,7 +86,6 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 
 		// Create post -> returns post id
 		postID, err := post.CreatePost(*post)
-
 		if err != nil {
 			fmt.Println(err)
 			http.Error(w, "Error creating post", http.StatusInternalServerError)

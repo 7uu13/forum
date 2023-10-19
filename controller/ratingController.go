@@ -53,7 +53,6 @@ func (_ *RatingController) RatingController(w http.ResponseWriter, r *http.Reque
 
 		if post_id_string != "" {
 			postID, err := strconv.Atoi(post_id_string)
-
 			if err != nil {
 				http.Error(w, "Invalid post_id", http.StatusBadRequest)
 				return

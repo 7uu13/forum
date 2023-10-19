@@ -64,7 +64,6 @@ func (p *Post) CreatePost(post Post) (int64, error) {
 }
 
 func (p *Post) GetCategoryPosts(category Categories) ([]Post, error) {
-
 	if category.Id == 0 {
 		return nil, nil
 	}
@@ -181,7 +180,6 @@ func (p *Post) GetPostById(id string) (Post, error) {
 	stmt := `SELECT * FROM posts WHERE id = ?`
 
 	err := config.DB.QueryRow(stmt, id).Scan(&post.Id, &post.Title, &post.Content, &post.Created, &post.UserId)
-
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return post, err
@@ -194,7 +192,6 @@ func (p *Post) GetPostById(id string) (Post, error) {
 func (p *PostRating) HandlePostRating(id, user_id int, rating string) {
 	stmt := `SELECT * FROM posts_rating WHERE post_id = ? AND user_id = ?`
 	err := config.DB.QueryRow(stmt, id, user_id).Scan(&p.Id, &p.PostId, &p.UserId, &p.Rating)
-
 	if err != nil {
 		if err == sql.ErrNoRows {
 			p.CreatePostRating(id, user_id, rating)
@@ -313,7 +310,6 @@ func (p *PostRating) CreatePostRating(id int, user_id int, rating string) (int64
 }
 
 func (p *PostRating) UpdatePostRating(id, user_id int, rating string) (int64, error) {
-
 	updateStmt := `UPDATE posts_rating SET rating = ? WHERE post_id = ? AND user_id = ?`
 
 	stmt, err := config.DB.Prepare(updateStmt)

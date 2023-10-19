@@ -14,7 +14,6 @@ func (_ *ReplyController) ReplyController(w http.ResponseWriter, r *http.Request
 	var postReply types.PostReply
 
 	switch r.Method {
-
 	case "POST":
 
 		user_id := 12345

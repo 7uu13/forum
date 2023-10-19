@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS posts_replies (
 	foreign key (user_id) REFERENCES users (id)
 );
 `
+
 const PostRepliesRatingTable = `
 CREATE TABLE IF NOT EXISTS posts_replies_rating (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,

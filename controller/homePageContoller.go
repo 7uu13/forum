@@ -10,9 +10,11 @@ import (
 
 type HomePageController struct{}
 
-var category types.Categories
-var postRating types.PostRating
-var postReply types.PostReply
+var (
+	category   types.Categories
+	postRating types.PostRating
+	postReply  types.PostReply
+)
 
 func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 	// Define the data structure to pass to templates
@@ -76,7 +78,6 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		content, err := postReply.GetPostReplies(postID)
-
 		if err != nil {
 			renderNotFoundTemplate(w, r)
 			return
@@ -119,12 +120,9 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 
 		data.Posts = posts
 		renderTemplate("ui/templates/home.html", w, data)
-	} else {
-		// when category or post id is not provided, return first category from the database
-		data.CurrentCategory = categories[0]
-		data.Posts, err = post.GetCategoryPosts(categories[0])
-		renderTemplate("ui/templates/home.html", w, data)
 	}
+
+	renderTemplate("ui/templates/home.html", w, data)
 }
 
 func renderNotFoundTemplate(w http.ResponseWriter, r *http.Request) {
