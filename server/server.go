@@ -31,7 +31,7 @@ func (s *Server) Start() error {
 
 	http.HandleFunc("/login", userController.Login)
 
-	//http.HandleFunc("/logout", userController.Logout)
+	http.HandleFunc("/logout", userController.Logout)
 
 	http.HandleFunc("/me", userController.ProfilePage)
 

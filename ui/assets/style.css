@@ -684,4 +684,12 @@ img {
     padding-bottom: 10px;
 }
 
+.like, .dislike , .reply-button {
+    transition: all 0.1s ease;
+}
+
+.like:hover, .dislike:hover, .reply-button:hover {
+    cursor: pointer;
+    padding: 6px;
+}
 

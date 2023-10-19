@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/7uu13/forum/config"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -74,10 +75,12 @@ func (u *User) CheckCredentials(username, password string) (User, error) {
 	if err != nil {
 		return User{}, err
 	}
-	// err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
-	if user.Password != password {
-		return User{}, fmt.Errorf("Password doesn't match")
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+
+	if err != nil {
+		return User{}, err
 	}
+
 	return user, nil
 }
 

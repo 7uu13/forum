@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -16,8 +15,18 @@ func (_ *ReplyController) ReplyController(w http.ResponseWriter, r *http.Request
 	switch r.Method {
 
 	case "POST":
+		user, err := ValidateSession(w, r)
+		referer := r.Header.Get("referer")
 
-		user_id := 12345
+		if err != nil {
+			http.Redirect(w, r, referer, http.StatusSeeOther)
+			return
+		}
+
+		if (user == types.User{}) {
+			http.Redirect(w, r, referer, http.StatusSeeOther)
+			return
+		}
 
 		post_id_string := r.URL.Query().Get("post_id")
 
@@ -33,13 +42,12 @@ func (_ *ReplyController) ReplyController(w http.ResponseWriter, r *http.Request
 		}
 
 		content := r.FormValue("content")
-		fmt.Println(content)
-		if user_id == 0 || post_id == 0 || content == "" {
+		if user.Id == 0 || post_id == 0 || content == "" {
 			http.Error(w, "Missing parameters", http.StatusBadRequest)
 			return
 		}
 
-		postReply.CreatePostReply(post_id, user_id, content)
+		postReply.CreatePostReply(post_id, user.Id, content)
 
 		http.Redirect(w, r, "/?post="+post_id_string, http.StatusSeeOther)
 	}

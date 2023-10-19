@@ -1,9 +1,14 @@
 package controller
 
 import (
+	"encoding/base64"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
+
+	"golang.org/x/crypto/bcrypt"
 
 	//"github.com/7uu13/forum/dto"
 
@@ -51,15 +56,21 @@ func (_ *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 			Password:  r.FormValue("password"),
 		}
 
-		userID, err := user.CreateUser(user)
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 		if err != nil {
+			fmt.Println("Error hashing the password:", err)
+			return
+		}
+		user.Password = string(hashedPassword)
+
+		userID, err := user.CreateUser(user)
+		if err != nil || userID == 0 {
 			fmt.Println(err)
 			http.Error(w, "Error creating user", http.StatusInternalServerError)
 			return
 		}
 
-		response := map[string]int64{"id": userID}
-		RespondWithJSON(w, http.StatusCreated, response)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
 
@@ -81,7 +92,7 @@ func (_ *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 
-		_, err := user.CheckCredentials(username, password)
+		user, err := user.CheckCredentials(username, password)
 
 		er := Error{
 			Message: "Incorrect Username or Password",
@@ -94,7 +105,6 @@ func (_ *UserController) Login(w http.ResponseWriter, r *http.Request) {
 		cookie := middleware.GenerateCookie(w, r, user.Id)
 
 		http.SetCookie(w, &cookie)
-
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -102,17 +112,16 @@ func (_ *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// func (_ *UserController) Logout(w http.ResponseWriter, r *http.Request) {
-// 	middleware.ClearSession(w, r)
-// 	http.Redirect(w, r, "/", http.StatusFound)
-// }
-
+func (_ *UserController) Logout(w http.ResponseWriter, r *http.Request) {
+	middleware.ClearSession(w, r)
+	http.Redirect(w, r, "/", http.StatusFound)
+}
 
 func (_ *UserController) ProfilePage(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("session-1")
 	if err != nil {
-		http.Error(w, "Session cookie not found", http.StatusUnauthorized)
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
 	}
 	//encodedData := base64.StdEncoding.EncodeToString([]byte(cookie.Value))
 	// Retrieve user data from the session cookie
@@ -126,4 +135,42 @@ func (_ *UserController) ProfilePage(w http.ResponseWriter, r *http.Request) {
 
 	// At this point, user contains the user data
 	fmt.Println("User:", user.Username)
+}
+
+func ValidateSession(w http.ResponseWriter, r *http.Request) (user types.User, err error) {
+	user = types.User{}
+
+	cookie, err := r.Cookie("session-1")
+	if err != nil {
+		return user, err
+	}
+
+	decodedCookie, err := base64.StdEncoding.DecodeString(cookie.Value)
+	cookieValues := strings.Split(string(decodedCookie), "::")
+
+	if len(cookieValues) != 2 {
+		return user, errors.New("Invalid cookie value")
+	}
+
+	session_id := cookieValues[0]
+	useragent := cookieValues[1]
+
+	if useragent != r.Header.Get("User-Agent") {
+		fmt.Println("User agent mismatch")
+		return user, errors.New("Invalid user agent")
+	}
+
+	fmt.Println("Session ID:", session_id)
+	user, err = user.GetUserFromSession(session_id)
+
+	fmt.Println("User:", user)
+	if err != nil {
+		return user, err
+	}
+
+	if user.Id == 0 {
+		return user, nil
+	}
+
+	return user, nil
 }

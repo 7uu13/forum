@@ -23,10 +23,23 @@ func (_ *RatingController) RatingController(w http.ResponseWriter, r *http.Reque
 	case "GET":
 
 	case "POST":
-		user_id := 12345
+		user, err := ValidateSession(w, r)
+		referer := r.Header.Get("Referer")
+
+		if err != nil {
+			// http.Error(w, "Invalid session", http.StatusBadRequest)
+			http.Redirect(w, r, referer, http.StatusSeeOther)
+			return
+		}
+
+		if (user == types.User{}) {
+			http.Redirect(w, r, referer, http.StatusSeeOther)
+			// http.Error(w, "Invalid session", http.StatusBadRequest)
+			return
+		}
+
 		post_id_string := r.URL.Query().Get("post_id")
 		rating_id_string := r.URL.Query().Get("rating_id")
-		referer := r.Header.Get("Referer")
 
 		// Define a common function to process ratings.
 		processRating := func(id int, rating string, handleFunc func(int, int, string)) {
@@ -42,12 +55,12 @@ func (_ *RatingController) RatingController(w http.ResponseWriter, r *http.Reque
 			}
 
 			ratingValue := r.FormValue("rating")
-			if user_id == 0 || ratingValue == "" {
+			if user.Id == 0 || ratingValue == "" {
 				http.Error(w, "Missing parameters", http.StatusBadRequest)
 				return
 			}
 
-			handleFunc(id, user_id, ratingValue)
+			handleFunc(id, user.Id, ratingValue)
 			http.Redirect(w, r, referer, http.StatusSeeOther)
 		}
 

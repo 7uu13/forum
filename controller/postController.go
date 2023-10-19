@@ -30,7 +30,6 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 		PUT - Update post
 
 	*/
-	const temp_user_id = 12345
 
 	categories, err := category.GetCategories()
 	if err != nil {
@@ -60,7 +59,22 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 		}
 
 	case "POST":
-		err := r.ParseForm()
+
+		user, err := ValidateSession(w, r)
+
+		referer := r.Header.Get("referer")
+
+		if err != nil {
+			http.Redirect(w, r, referer, http.StatusSeeOther)
+			return
+		}
+
+		if (user == types.User{}) {
+			http.Redirect(w, r, referer, http.StatusSeeOther)
+			return
+		}
+
+		err = r.ParseForm()
 		if err != nil {
 			http.Error(w, "Invalid JSON", http.StatusBadRequest)
 			return
@@ -82,7 +96,7 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 		post := &types.Post{
 			Title:   title,
 			Content: content,
-			UserId:  temp_user_id,
+			UserId:  user.Id,
 		}
 
 		// Create post -> returns post id

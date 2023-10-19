@@ -24,7 +24,7 @@
         <h2>Kategooria: {{.CurrentCategory.Name}}</h2>
         <div class="post-content">
           <h1 class="post-title">{{.CurrentPost.Title}}</h1>
-          <p class="name">Postitaja nimi</p>
+          <p class="name">{{.CurrentPost.Username}}</p>
           <p>{{.CurrentPost.Content}}</p>
           <div class="ratings">
             <form
@@ -69,7 +69,7 @@
           {{range .CurrentPostReplies}}
           <div class="post-reply">
             <p class="time">{{.Created.Format "15:04 January 2, 2006"}}</p>
-            <p class="name">{{.UserId}}</p>
+            <p class="name">{{.Username}}</p>
             <p class="reply">{{.Content}}</p>
             <div class="ratings">
               <form

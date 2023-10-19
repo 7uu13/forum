@@ -8,11 +8,12 @@ import (
 )
 
 type Post struct {
-	Id      int
-	Title   string
-	Content string
-	Created time.Time
-	UserId  int
+	Id       int
+	Title    string
+	Content  string
+	Created  time.Time
+	UserId   int
+	Username string
 }
 
 type PostRating struct {
@@ -26,6 +27,7 @@ type PostReply struct {
 	Id       int
 	PostId   int
 	UserId   int
+	Username string
 	Content  string
 	Created  time.Time
 	Dislikes int
@@ -178,9 +180,14 @@ func (p *Post) GetCategoryCreatedPosts(category Categories, user_id int) ([]Post
 
 func (p *Post) GetPostById(id string) (Post, error) {
 	var post Post
-	stmt := `SELECT * FROM posts WHERE id = ?`
+	stmt := `
+		SELECT posts.*, u.Username
+		FROM posts
+		JOIN Users u ON posts.user_id = u.id
+		WHERE posts.id = ?
+	`
 
-	err := config.DB.QueryRow(stmt, id).Scan(&post.Id, &post.Title, &post.Content, &post.Created, &post.UserId)
+	err := config.DB.QueryRow(stmt, id).Scan(&post.Id, &post.Title, &post.Content, &post.Created, &post.UserId, &post.Username)
 
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -393,7 +400,7 @@ func (p *PostReply) GetPostReplies(id string) ([]PostReply, error) {
 	/*
 		Iterates through all the ratings for a post and returns the number of likes and dislikes
 	*/
-	stmt := `SELECT * FROM posts_replies WHERE post_id = ?`
+	stmt := `SELECT pr.*, u.username FROM posts_replies pr JOIN Users u ON pr.user_id = u.id WHERE pr.post_id = ?`
 
 	var postReplies []PostReply
 	res, err := config.DB.Query(stmt, id)
@@ -410,8 +417,7 @@ func (p *PostReply) GetPostReplies(id string) ([]PostReply, error) {
 			panic(err)
 		}
 
-		err = res.Scan(&postReply.Id, &postReply.PostId, &postReply.UserId, &postReply.Content, &postReply.Created)
-
+		err = res.Scan(&postReply.Id, &postReply.PostId, &postReply.UserId, &postReply.Content, &postReply.Created, &postReply.Username)
 		dislikes, likes, err := p.GetReplyRatings(postReply.Id)
 		postReply.Dislikes = dislikes
 		postReply.Likes = likes
