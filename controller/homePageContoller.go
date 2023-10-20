@@ -58,18 +58,20 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 	categorySlug := r.URL.Query().Get("category")
 
 	if postID != "" {
+		postID = r.URL.Query().Get("post")
 		category, err := category.GetCurrentCategory(categorySlug)
-
-		if err != nil || category.Id == 0 {
+		if err != nil {
 			renderNotFoundTemplate(w, r)
 			return
 		}
+
 		data.CurrentCategory = category
 		currentPost, err := post.GetPostById(postID)
 		if err != nil {
 			renderNotFoundTemplate(w, r)
 			return
 		}
+
 		dislikes, likes, err := postRating.GetPostRatings(postID)
 		if err != nil {
 			renderNotFoundTemplate(w, r)
@@ -89,6 +91,7 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 		renderTemplate("ui/templates/post.html", w, data)
 
 	} else if categorySlug != "" {
+
 		category, err := category.GetCurrentCategory(categorySlug)
 
 		if err != nil || category.Id == 0 {
@@ -102,11 +105,33 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 
 		switch filter {
 		case "liked-posts":
-			posts, err = post.GetCategoryLikedPosts(category, 12345)
+			user, err := ValidateSession(w, r)
+
+			referer := r.Header.Get("referer")
+
+			if err != nil {
+				http.Redirect(w, r, referer, http.StatusSeeOther)
+				return
+			}
+			posts, err = post.GetCategoryLikedPosts(category, user.Id)
+			if err != nil {
+				log.Println(err)
+			}
 			break
 
 		case "created-posts":
-			posts, err = post.GetCategoryCreatedPosts(category, 12345)
+			user, err := ValidateSession(w, r)
+
+			referer := r.Header.Get("referer")
+
+			if err != nil {
+				http.Redirect(w, r, referer, http.StatusSeeOther)
+				return
+			}
+			posts, err = post.GetCategoryCreatedPosts(category, user.Id)
+			if err != nil {
+				log.Println(err)
+			}
 			break
 
 		default:
@@ -119,10 +144,60 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 
 		data.Posts = posts
 		renderTemplate("ui/templates/home.html", w, data)
+
 	} else {
 		// when category or post id is not provided, return first category from the database
 		data.CurrentCategory = categories[0]
 		data.Posts, err = post.GetCategoryPosts(categories[0])
+		if err != nil {
+			log.Println(err)
+		}
+		var posts []types.Post
+		category, err := category.GetCurrentCategory("python")
+		if err != nil {
+			log.Println(err)
+		}
+
+		switch filter {
+		case "liked-posts":
+			user, err := ValidateSession(w, r)
+
+			referer := r.Header.Get("referer")
+
+			if err != nil {
+				http.Redirect(w, r, referer, http.StatusSeeOther)
+				return
+			}
+			posts, err = post.GetCategoryLikedPosts(category, user.Id)
+			if err != nil {
+				log.Println(err)
+			}
+			break
+
+		case "created-posts":
+			user, err := ValidateSession(w, r)
+
+			referer := r.Header.Get("referer")
+
+			if err != nil {
+				http.Redirect(w, r, referer, http.StatusSeeOther)
+				return
+			}
+			posts, err = post.GetCategoryCreatedPosts(category, user.Id)
+			if err != nil {
+				log.Println(err)
+			}
+			break
+
+		default:
+			posts, err = post.GetCategoryPosts(category)
+		}
+
+		if err != nil || len(posts) == 0 {
+			log.Println(err)
+		}
+
+		data.Posts = posts
 		renderTemplate("ui/templates/home.html", w, data)
 	}
 }

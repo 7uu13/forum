@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forum</title> 
+    <title>Forum</title>
     <link rel="stylesheet" href="/assets/style.css">
 </head>
+
 <body>
     <header>
         <nav class="topnav">
@@ -20,6 +22,9 @@
     </header>
     <main class="signup-main">
         <form action="/signup" method="POST" enctype="application/json" class="signup-container">
+            {{ if .Message }}
+            <div class="signup-error"> {{ .Message }} </div>
+            {{ end }}
             <h2>Sign up</h2>
             <div class="input-area">
                 <label for="username">Username:</label>
@@ -53,9 +58,10 @@
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required><br><br>
             </div>
-    
+
             <input type="submit" value="Sign Up" class="signup-button">
         </form>
     </main>
 </body>
+
 </html>

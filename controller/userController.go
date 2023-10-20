@@ -30,7 +30,7 @@ func (_ *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 
 	case "GET":
-		http.ServeFile(w, r, "ui/templates/signup.html")
+		RenderPage(w, "ui/templates/signup.html", nil)
 
 	case "POST":
 		err := r.ParseForm()
@@ -64,9 +64,13 @@ func (_ *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 		user.Password = string(hashedPassword)
 
 		userID, err := user.CreateUser(user)
+		er := Error{
+			Message: "Email already taken",
+		}
 		if err != nil || userID == 0 {
-			fmt.Println(err)
-			http.Error(w, "Error creating user", http.StatusInternalServerError)
+
+			RenderPage(w, "ui/templates/signup.html", er)
+
 			return
 		}
 

@@ -68,33 +68,33 @@
           </div>
           {{range .CurrentPostReplies}}
           <div class="post-reply">
-            <p class="time">{{.Created.Format "15:04 January 2, 2006"}}</p>
             <p class="name">{{.Username}}</p>
             <p class="reply">{{.Content}}</p>
             <div class="ratings">
               <form
-                id="reply-rating"
-                method="POST"
-                action="/handle-rating?rating_id={{.Id}}">
-                <button value="0" name="rating" class="dislike">
-                  {{if ne .Dislikes 1}} {{.Dislikes}} Dislikes {{else}}
-                  {{.Dislikes}} Dislike {{end}}
-                </button>
-              </form>
-              <form
-                id="reply-rating"
-                method="POST"
-                action="/handle-rating?rating_id={{.Id}}">
-                <button
-                  value="1"
-                  name="rating"
-                  class="like"
-                  action="/handle-rating?rating_id={{.Id}}">
-                  {{if ne .Likes 1}} {{.Likes}} Likes {{else}} {{.Likes}} Like
-                  {{end}}
-                </button>
-              </form>
-            </div>
+              id="reply-rating"
+              method="POST"
+              action="/handle-rating?rating_id={{.Id}}">
+              <button value="0" name="rating" class="dislike">
+                {{if ne .Dislikes 1}} {{.Dislikes}} Dislikes {{else}}
+                {{.Dislikes}} Dislike {{end}}
+              </button>
+            </form>
+            <form
+            id="reply-rating"
+            method="POST"
+            action="/handle-rating?rating_id={{.Id}}">
+            <button
+            value="1"
+            name="rating"
+            class="like"
+            action="/handle-rating?rating_id={{.Id}}">
+            {{if ne .Likes 1}} {{.Likes}} Likes {{else}} {{.Likes}} Like
+            {{end}}
+          </button>
+        </form>
+      </div>
+      <p class="time">{{.Created.Format "15:04 January 2, 2006"}}</p>
           </div>
           <span></span>
           {{end}}

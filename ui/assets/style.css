@@ -661,7 +661,7 @@ img {
 .time {
     font-size: 16px;
     color: rgba(26, 26, 26, 0.517);
-    margin-bottom: 0px;
+    
 }
 
 .reply-container .name {
@@ -693,3 +693,11 @@ img {
     padding: 6px;
 }
 
+.post-reply .name {
+    margin-top: 10px;
+}
+
+.signup-error {
+    color: red;
+    text-align: center;
+}
