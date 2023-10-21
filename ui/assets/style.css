@@ -638,18 +638,23 @@ img {
     margin-top: 5px;
 }
 
-.create-post-category select {
-    padding: 3px;
-    font-size: 1rem;
+.create-post-category {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 300px;
 }
 
 .submit-post {
-    margin-left: 80px;
-    margin-top: 10px;
+
+    margin: 20px 0 0 70px;
+    text-align: center;
     font-size: 1rem;
     padding: 5px 10px 5px 10px;
     background-color: chartreuse;
     border: 1px solid gray;
+    
 }
 
 .post-time{

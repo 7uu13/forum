@@ -79,47 +79,46 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Invalid JSON", http.StatusBadRequest)
 			return
 		}
-
-		// Form values ->
+		
 		title := r.FormValue("title")
 		content := r.FormValue("content")
-		category_IdStr := r.FormValue("category")
+		categoryIDs := r.PostForm["categories"]
 
-		// Convert string to int
-		category_Id, err := strconv.Atoi(category_IdStr)
+		for _, categoryIDStr := range categoryIDs {
+			categoryID, err := strconv.Atoi(categoryIDStr)
+			if err != nil {
+				fmt.Println(err)
+				http.Error(w, "Invalid category ID", http.StatusBadRequest)
+				return
+			}
 
-		if err != nil {
-			category_Id = 0
+			// Create a separate Post for each selected category
+			post := &types.Post{
+				Title:   title,
+				Content: content,
+				UserId:  user.Id,
+			}
+
+			postID, err := post.CreatePost(*post)
+
+			if err != nil {
+				fmt.Println(err)
+				http.Error(w, "Error creating post", http.StatusInternalServerError)
+				return
+			}
+
+			postsCategory := &types.PostCategories{
+				CategoryId: categoryID,
+				PostId:     int(postID),
+			}
+			_, err = category.CreatePostCategory(*&postsCategory)
+			if err != nil {
+				fmt.Println(err)
+				http.Error(w, "Error creating posts category", http.StatusInternalServerError)
+				return
+			}
+			http.Redirect(w, r, "/?post="+strconv.Itoa(int(postID)), http.StatusSeeOther)
 		}
-
-		// Post Structure
-		post := &types.Post{
-			Title:   title,
-			Content: content,
-			UserId:  user.Id,
-		}
-
-		// Create post -> returns post id
-		postID, err := post.CreatePost(*post)
-
-		if err != nil {
-			fmt.Println(err)
-			http.Error(w, "Error creating post", http.StatusInternalServerError)
-			return
-		}
-
-		postsCategory := &types.PostCategories{
-			CategoryId: int(category_Id),
-			PostId:     int(postID),
-		}
-
-		_, err = category.CreatePostCategory(*&postsCategory)
-		if err != nil {
-			fmt.Println(err)
-			http.Error(w, "Error creating posts category", http.StatusInternalServerError)
-			return
-		}
-
-		http.Redirect(w, r, "/?post="+strconv.Itoa(int(postID)), http.StatusSeeOther)
+		
 	}
 }
