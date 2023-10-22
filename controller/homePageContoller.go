@@ -10,12 +10,13 @@ import (
 
 type HomePageController struct{}
 
-var category types.Categories
-var postRating types.PostRating
-var postReply types.PostReply
+var (
+	category   types.Categories
+	postRating types.PostRating
+	postReply  types.PostReply
+)
 
 func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
-	// Define the data structure to pass to templates
 	data := struct {
 		Categories          []types.Categories
 		CurrentCategory     types.Categories

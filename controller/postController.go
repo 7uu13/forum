@@ -15,21 +15,6 @@ type PostController struct{}
 var post types.Post
 
 func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
-	// TODO: Implement Session Authentication for this handler
-	// TODO: Check if user is logged in, if not redirect to login page
-	// TODO: Get User ID from session
-
-	/*
-		Post controller
-
-		GET - Return HTML where user can create post
-		GET ?category=test - Return posts from category
-
-		DELETE - Delete post
-		POST - Create post
-		PUT - Update post
-
-	*/
 
 	categories, err := category.GetCategories()
 	if err != nil {
@@ -79,7 +64,7 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Invalid JSON", http.StatusBadRequest)
 			return
 		}
-		
+
 		title := r.FormValue("title")
 		content := r.FormValue("content")
 		categoryIDs := r.PostForm["categories"]
@@ -119,6 +104,6 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 			}
 			http.Redirect(w, r, "/?post="+strconv.Itoa(int(postID)), http.StatusSeeOther)
 		}
-		
+
 	}
 }

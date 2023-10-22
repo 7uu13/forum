@@ -10,15 +10,11 @@ import (
 type RatingController struct{}
 
 func (_ *RatingController) RatingController(w http.ResponseWriter, r *http.Request) {
-	var postRating types.PostRating
-	var replyRating types.ReplyRating
+	var (
+		postRating  types.PostRating
+		replyRating types.ReplyRating
+	)
 
-	/*
-		GET - Gets ratings for a post and returns them as JSON
-		POST - Creates a rating for a post
-		PUT - Updates a rating for a post
-		DELETE - Deletes a rating for a post
-	*/
 	switch r.Method {
 	case "GET":
 
@@ -27,14 +23,12 @@ func (_ *RatingController) RatingController(w http.ResponseWriter, r *http.Reque
 		referer := r.Header.Get("Referer")
 
 		if err != nil {
-			// http.Error(w, "Invalid session", http.StatusBadRequest)
 			http.Redirect(w, r, referer, http.StatusSeeOther)
 			return
 		}
 
 		if (user == types.User{}) {
 			http.Redirect(w, r, referer, http.StatusSeeOther)
-			// http.Error(w, "Invalid session", http.StatusBadRequest)
 			return
 		}
 

@@ -92,4 +92,3 @@ func (c *Categories) CreatePostCategory(postCategories *PostCategories) (int64, 
 
 	return postCategoryID, nil
 }
-

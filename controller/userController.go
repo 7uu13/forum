@@ -10,8 +10,6 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	//"github.com/7uu13/forum/dto"
-
 	"github.com/7uu13/forum/middleware"
 	"github.com/7uu13/forum/types"
 )

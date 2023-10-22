@@ -11,15 +11,6 @@ import (
 type CategoryController struct{}
 
 func (_ *CategoryController) CategoryController(w http.ResponseWriter, r *http.Request) {
-	/*
-		Categories controller
-
-		GET - Get Categories from table
-		DELETE - Delete category
-		POST - Create category
-		PUT - Update category
-
-	*/
 
 	category_slug := r.URL.Query().Get("slug")
 
@@ -29,9 +20,9 @@ func (_ *CategoryController) CategoryController(w http.ResponseWriter, r *http.R
 		var err error
 
 		if category_slug == "" {
-			categories, err = category.GetCategories() // Get all categories
+			categories, err = category.GetCategories()
 		} else {
-			categories, err = category.GetCategoryBySlug(category_slug) // Get category by slug
+			categories, err = category.GetCategoryBySlug(category_slug)
 		}
 
 		if err != nil {
@@ -40,7 +31,6 @@ func (_ *CategoryController) CategoryController(w http.ResponseWriter, r *http.R
 			return
 		}
 
-		// Encode the 'categories' slice as JSON
 		categoriesJson, err := json.Marshal(categories)
 		if err != nil {
 			http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
