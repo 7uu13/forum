@@ -14,9 +14,7 @@
             <img src="assets/images/logo.png" alt="Logo">
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/login">Login</a></li>
                 <li><a href="/logout">Logout</a></li>
-                <li><a href="/me">Profile</a></li>
             </ul>
         </nav>
     </header>
@@ -27,18 +25,6 @@
                 <p>First Name: <span>{{ .FirstName }}</span></p>
                 <p>Last Name: <span>{{ .LastName }}</span></p>
                 <p class="email">Email: <span>{{ .Email }}</span></p>
-        </div>
-        <div class="delete-form">
-            <div>
-                <form action="/me" method="DELETE" enctype="application/json">
-                    <div class="input-area">
-                        <label for="username">Delete Account:</label>
-                        <input class="delete-confirm" type="text" id="Delete-confirm" name="Delete-confirm"
-                            placeholder="Type DELETE to delete your account"><br><br>
-                        <input class="delete" type="submit" value="DELETE" class="signup-button">
-                    </div>
-                </div>
-            </form>
         </div>
     </main>
 </body>

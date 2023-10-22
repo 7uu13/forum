@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-	"html/template"
 	"log"
 	"net/http"
 	"strconv"
@@ -15,6 +14,8 @@ type PostController struct{}
 var post types.Post
 
 func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
+	_, err := ValidateSession(w, r)
+
 
 	categories, err := category.GetCategories()
 	if err != nil {
@@ -22,9 +23,11 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := struct {
+		SessionValid    bool
 		Categories      []types.Categories
 		CurrentCategory types.Categories
 	}{
+		SessionValid:   err == nil,
 		Categories:      categories,
 		CurrentCategory: category,
 	}
@@ -32,16 +35,7 @@ func (_ *PostController) CreatePost(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "GET":
 
-		tmpl, err := template.ParseGlob("ui/templates/createPost.html")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		err = tmpl.Execute(w, data)
-
-		if err != nil {
-			log.Fatal(err)
-		}
+		RenderPage(w, "ui/templates/createPost.html", data)
 
 	case "POST":
 

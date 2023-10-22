@@ -10,15 +10,10 @@ import (
 type RatingController struct{}
 
 func (_ *RatingController) RatingController(w http.ResponseWriter, r *http.Request) {
-	var (
-		postRating  types.PostRating
-		replyRating types.ReplyRating
-	)
 
-	switch r.Method {
-	case "GET":
+	var replyRating types.ReplyRating
 
-	case "POST":
+	if r.Method == "POST" {
 		user, err := ValidateSession(w, r)
 		referer := r.Header.Get("Referer")
 

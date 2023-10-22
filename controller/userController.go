@@ -15,7 +15,8 @@ import (
 )
 
 type Error struct {
-	Message string
+	Message      string
+	SessionValid bool
 }
 
 type UserController struct{}
@@ -25,10 +26,14 @@ var (
 )
 
 func (_ *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
+
 	switch r.Method {
 
 	case "GET":
-		RenderPage(w, "ui/templates/signup.html", nil)
+		_, err := ValidateSession(w, r)
+		RenderPage(w, "ui/templates/signup.html", Error{
+			SessionValid: err == nil,
+		})
 
 	case "POST":
 		err := r.ParseForm()
@@ -63,7 +68,7 @@ func (_ *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 		userID, err := user.CreateUser(user)
 		er := Error{
-			Message: "Email already taken",
+			Message: "Email or Username already taken",
 		}
 		if err != nil || userID == 0 {
 
@@ -116,7 +121,7 @@ func (_ *UserController) Login(w http.ResponseWriter, r *http.Request) {
 
 func (_ *UserController) Logout(w http.ResponseWriter, r *http.Request) {
 	middleware.ClearSession(w, r)
-	http.Redirect(w, r, "/", http.StatusFound)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func (_ *UserController) ProfilePage(w http.ResponseWriter, r *http.Request) {
@@ -126,16 +131,8 @@ func (_ *UserController) ProfilePage(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}
-
-	if err != nil {
-		http.Error(w, "Error fetching user data", http.StatusInternalServerError)
-		return
-	}
-
+	
 	RenderPage(w, "ui/templates/userProfile.html", user)
-
-	// At this point, user contains the user data
-	fmt.Println("User:", user.Username)
 }
 
 func ValidateSession(w http.ResponseWriter, r *http.Request) (user types.User, err error) {
@@ -147,6 +144,10 @@ func ValidateSession(w http.ResponseWriter, r *http.Request) (user types.User, e
 	}
 
 	decodedCookie, err := base64.StdEncoding.DecodeString(cookie.Value)
+	if err != nil {
+		errors.New("Error decoding cookie")
+		return
+	}
 	cookieValues := strings.Split(string(decodedCookie), "::")
 
 	if len(cookieValues) != 2 {
@@ -161,10 +162,8 @@ func ValidateSession(w http.ResponseWriter, r *http.Request) (user types.User, e
 		return user, errors.New("Invalid user agent")
 	}
 
-	fmt.Println("Session ID:", session_id)
 	user, err = user.GetUserFromSession(session_id)
 
-	fmt.Println("User:", user)
 	if err != nil {
 		return user, err
 	}

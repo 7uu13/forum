@@ -14,8 +14,7 @@ func (_ *CategoryController) CategoryController(w http.ResponseWriter, r *http.R
 
 	category_slug := r.URL.Query().Get("slug")
 
-	switch r.Method {
-	case "GET":
+	if r.Method == "GET" {
 		categories := []types.Categories{}
 		var err error
 
@@ -40,7 +39,5 @@ func (_ *CategoryController) CategoryController(w http.ResponseWriter, r *http.R
 		w.WriteHeader(http.StatusAccepted)
 		w.Write(categoriesJson)
 
-	case "POST":
-		fmt.Println("POST")
 	}
 }

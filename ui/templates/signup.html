@@ -11,15 +11,19 @@
 <body>
     <header>
         <nav class="topnav">
-            <img src="assets/images/logo.png" alt="Logo">
+          <img src="/assets/images/logo.png" alt="Logo" />
+          <ul>
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/login">Login</a></li>
-                <li><a href="/logout">Logout</a></li>
-                <li><a href="/me">Profile</a></li>
-            </ul>
+              <li><a href="/">Home</a></li>
+              {{if .SessionValid}}
+                  <li><a href="/logout">Logout</a></li>
+                  <li><a href="/me">Profile</a></li>
+              {{else}}
+                  <li><a href="/login">Login</a></li>
+              {{end}}
+          </ul>
         </nav>
-    </header>
+      </header>
     <main class="signup-main">
         <form action="/signup" method="POST" enctype="application/json" class="signup-container">
             {{ if .Message }}

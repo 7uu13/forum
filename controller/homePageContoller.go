@@ -17,7 +17,10 @@ var (
 )
 
 func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
+	_, err := ValidateSession(w, r)
+
 	data := struct {
+		SessionValid        bool
 		Categories          []types.Categories
 		CurrentCategory     types.Categories
 		CurrentPost         types.Post
@@ -27,6 +30,7 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 
 		Posts []types.Post
 	}{
+		SessionValid:        err == nil,
 		Categories:          []types.Categories{},
 		CurrentCategory:     types.Categories{},
 		CurrentPost:         types.Post{},
@@ -148,8 +152,11 @@ func (_ *HomePageController) HomePage(w http.ResponseWriter, r *http.Request) {
 
 	} else {
 		// when category or post id is not provided, return first category from the database
+		
+		
 		data.CurrentCategory = categories[0]
 		data.Posts, err = post.GetCategoryPosts(categories[0])
+
 		if err != nil {
 			log.Println(err)
 		}

@@ -83,24 +83,3 @@ func (u *User) CheckCredentials(username, password string) (User, error) {
 
 	return user, nil
 }
-
-func (u *User) DeleteUser(username string) (int64, error) {
-	insertStmt := `DELETE FROM users WHERE username=?`
-
-	stmt, err := config.DB.Prepare(insertStmt)
-	if err != nil {
-		return 0, err
-	}
-
-	result, err := stmt.Exec(username)
-	if err != nil {
-		return 0, err
-	}
-
-	userID, err := result.LastInsertId()
-	if err != nil {
-		return 0, err
-	}
-
-	return userID, nil
-}

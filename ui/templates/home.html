@@ -11,10 +11,14 @@
       <nav class="topnav">
         <img src="/assets/images/logo.png" alt="Logo" />
         <ul>
-          <li><a href="/">Home</a></li> 
-          <li><a href="/login">Login</a></li>
-          <li><a href="/logout">Logout</a></li>
-          <li><a href="/me">Profile</a></li>
+          <ul>
+            <li><a href="/">Home</a></li>
+            {{if .SessionValid}}
+                <li><a href="/logout">Logout</a></li>
+                <li><a href="/me">Profile</a></li>
+            {{else}}
+                <li><a href="/login">Login</a></li>
+            {{end}}
         </ul>
       </nav>
     </header>
@@ -31,8 +35,11 @@
             </select>
           </div>
         </div>
-        <form action="/create" class="create">
-          <input type="submit" value="Create Post">
+        {{if .SessionValid}}
+          <form action="/create" class="create">
+            <input type="submit" value="Create Post">
+        {{else}}
+        {{end}}
       </form>
       </div>
         <div class="headers">

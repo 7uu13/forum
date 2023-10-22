@@ -64,3 +64,4 @@ func ClearSession(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &cookie)
 }
+
